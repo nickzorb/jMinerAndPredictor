@@ -30,22 +30,23 @@ public class FinalResultsPanel extends javax.swing.JPanel {
         attributes = fvAttributes;
         results = dResults;
         descriptions = sDescriptions;
-        selectionSort();
+        sort();
         classifiersCB.removeAllItems();
         for (String s : classifiers) {
             classifiersCB.addItem(s.substring(s.indexOf("/") + 1));
         }
         ready = 1;
+        classifiersCB.setSelectedIndex(0);
     }
 
-    private void selectionSort() {
+    private void sort() {
         for (int i = 0; i < results.length - 1; i++) {
             for (int j = i + 1; j < results.length; j++) {
                 if (results[j] > results[i]) {
-                    results[i] += results[j];
-                    results[j] = results[i] - results[j];
-                    results[i] -= results[j];
                     Object temp;
+                    temp = results[j];
+                    results[j] = results[i];
+                    results[i] = (double) temp;
                     temp = classifierNames[j];
                     classifierNames[j] = classifierNames[i];
                     classifierNames[i] = (String) temp;
@@ -191,6 +192,9 @@ public class FinalResultsPanel extends javax.swing.JPanel {
             if (idx != 0) {
                 idx--;
             } else {
+                resultL.setText("");
+                descriptionTA.setText("");
+                deleteB.setEnabled(false);
                 return;
             }
         }
