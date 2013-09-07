@@ -3,7 +3,7 @@ package gr.hua.data_manipulation;
 import java.io.Serializable;
 
 public class Change implements Serializable, Cloneable {
-    
+
     private String value_affected;
     private String new_value;
 
@@ -11,7 +11,7 @@ public class Change implements Serializable, Cloneable {
         this.value_affected = value_affected;
         this.new_value = new_value;
     }
-    
+
     private Change(Change c) {
         value_affected = c.value_affected;
         new_value = c.new_value;
@@ -37,5 +37,4 @@ public class Change implements Serializable, Cloneable {
     public Change clone() {
         return new Change(this);
     }
-    
 }

@@ -2,9 +2,8 @@ package gr.hua.gui.DataMiner;
 
 import javax.swing.JList;
 
-
 public class JListItem {
-    
+
     private String label;
     private int index;
     private Object value;
@@ -48,10 +47,9 @@ public class JListItem {
     public void setParent(JList parent) {
         this.parent = parent;
     }
-    
+
     @Override
     public String toString() {
         return label;
     }
-    
 }

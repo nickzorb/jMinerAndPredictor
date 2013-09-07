@@ -3,7 +3,7 @@ package gr.hua.gui.DataMiner;
 import weka.classifiers.trees.J48;
 
 public class J48Panel extends MiningMethodPanel {
-    
+
     public J48Panel() {
         setName("C4.5");
         title = "C4.5";

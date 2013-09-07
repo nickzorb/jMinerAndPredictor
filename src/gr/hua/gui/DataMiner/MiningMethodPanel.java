@@ -26,7 +26,6 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     private static final J48Panel j48 = new J48Panel();
     private static final NeuralNetworkPanel nnet = new NeuralNetworkPanel();
     private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet};
-    
     protected ArrayList<CloneableAttribute> attributes;
     protected CloneableAttribute target;
     protected Properties properties;

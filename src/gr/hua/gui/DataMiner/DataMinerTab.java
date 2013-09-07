@@ -20,11 +20,11 @@ import javax.swing.ListSelectionModel;
  * @author r0t0r
  */
 public class DataMinerTab extends Tab {
-    
+
     private int id1 = 0, id2 = 0, id3 = 0;
     private ArrayList<JListItem> columns;
     private ArrayList<MiningMethodPanel> alMiningMethods = new ArrayList();
-    
+
     public DataMinerTab(MainMenu parent, String title) {
         super(parent, title);
         initComponents();
@@ -40,7 +40,7 @@ public class DataMinerTab extends Tab {
         }
         miningMethods.revalidate();
     }
-    
+
     private boolean checkForDuplicates() {
         for (int i = 0; i < columns.size() - 1; i++) {
             for (int j = i + 1; j < columns.size(); j++) {
@@ -56,7 +56,7 @@ public class DataMinerTab extends Tab {
         }
         return true;
     }
-    
+
     private void initColumns() {
         columns = new ArrayList();
         for (int i = 0; i < MainMenu.MANAGER.getNumberOfColumns(); i++) {
@@ -64,7 +64,7 @@ public class DataMinerTab extends Tab {
             columns.add(new JListItem(temp.getName(), i, temp.getAttribute(), columnsList));
         }
     }
-    
+
     private void loadMiner() {
         if (!MainMenu.MANAGER.ready()) {
             return;
@@ -82,7 +82,7 @@ public class DataMinerTab extends Tab {
         selColumnsList.setSelectedIndex(id2);
         targetList.setSelectedIndex(id3);
     }
-    
+
     private void savePositions() {
         id1 = columnsList.getSelectedIndex();
         id2 = selColumnsList.getSelectedIndex();
@@ -94,7 +94,7 @@ public class DataMinerTab extends Tab {
             p.setProperty(Trainer.OPTIMIZE_ATTRIBUTES, "ON");
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -129,11 +129,6 @@ public class DataMinerTab extends Tab {
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
-            }
-        });
-        addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                onFocusGain(evt);
             }
         });
 
@@ -325,7 +320,7 @@ public class DataMinerTab extends Tab {
             loadMiner();
         }
     }//GEN-LAST:event_addBActionPerformed
-    
+
     private void removeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBActionPerformed
         savePositions();
         int[] id = selColumnsList.getSelectedIndices();
@@ -336,7 +331,7 @@ public class DataMinerTab extends Tab {
             loadMiner();
         }
     }//GEN-LAST:event_removeBActionPerformed
-    
+
     private void mineBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mineBActionPerformed
         if (!MainMenu.MANAGER.ready()) {
             JOptionPane.showMessageDialog(this, "There are errors in the currently open file! Please fix them before mining.");
@@ -370,21 +365,16 @@ public class DataMinerTab extends Tab {
             }
         }
     }//GEN-LAST:event_mineBActionPerformed
-    
+
     private void autoAttributesCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAttributesCBActionPerformed
         columnsList.setEnabled(!autoAttributesCB.isSelected());
         selColumnsList.setEnabled(!autoAttributesCB.isSelected());
     }//GEN-LAST:event_autoAttributesCBActionPerformed
-    
+
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         initColumns();
         loadMiner();
     }//GEN-LAST:event_formComponentShown
-    
-    private void onFocusGain(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_onFocusGain
-        initColumns();
-        loadMiner();
-    }//GEN-LAST:event_onFocusGain
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addB;
     private javax.swing.JCheckBox autoAttributesCB;

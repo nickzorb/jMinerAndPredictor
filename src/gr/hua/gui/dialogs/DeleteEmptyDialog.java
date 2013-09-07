@@ -12,17 +12,17 @@ import javax.swing.SpinnerNumberModel;
  */
 public class DeleteEmptyDialog extends javax.swing.JDialog {
 
-    double res=-1;
-    
+    double res = -1;
+
     public DeleteEmptyDialog(java.awt.Frame parent, boolean modal, String s) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
         targetL.setText(s);
-        percSp.setModel(new SpinnerNumberModel(90,10,99,0.1));
+        percSp.setModel(new SpinnerNumberModel(90, 10, 99, 0.1));
     }
-    
-    public double showDialog(){
+
+    public double showDialog() {
         this.setVisible(true);
         return res;
     }
@@ -125,19 +125,17 @@ public class DeleteEmptyDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBActionPerformed
-        res=-1;
+        res = -1;
         this.setVisible(false);
     }//GEN-LAST:event_cancelBActionPerformed
 
     private void deleteBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBActionPerformed
-        res=(double)percSp.getValue();
+        res = (double) percSp.getValue();
         this.setVisible(false);
     }//GEN-LAST:event_deleteBActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelB;
     private javax.swing.JButton deleteB;

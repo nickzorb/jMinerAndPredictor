@@ -14,7 +14,7 @@ public class ManualValueDialog extends javax.swing.JDialog {
      * Creates new form ManualValueDialog
      */
     String res;
-    
+
     public ManualValueDialog(String msg1, String msg2, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -22,19 +22,19 @@ public class ManualValueDialog extends javax.swing.JDialog {
         message1.setText(msg1);
         message.setText(msg2);
     }
-    
-    public ManualValueDialog(String msg,java.awt.Frame parent, boolean modal) {
+
+    public ManualValueDialog(String msg, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
         message1.setText(msg);
     }
-    
-    public String getAnswer(){
+
+    public String getAnswer() {
         this.setVisible(true);
         return res;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,10 +111,9 @@ public class ManualValueDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        res=input.getText();
+        res = input.getText();
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField input;
     private javax.swing.JButton jButton1;

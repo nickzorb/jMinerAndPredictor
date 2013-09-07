@@ -29,9 +29,9 @@ public final class FileOptionsDialog extends MyDialog {
         initLabels();
         charsetSp.setModel(new SpinnerListModel(charsets));
         wCharsetSp.setModel(new SpinnerListModel(charsets));
-        ((JSpinner.DefaultEditor)charsetSp.getEditor())
+        ((JSpinner.DefaultEditor) charsetSp.getEditor())
                 .getTextField().setEditable(false);
-        ((JSpinner.DefaultEditor)wCharsetSp.getEditor())
+        ((JSpinner.DefaultEditor) wCharsetSp.getEditor())
                 .getTextField().setEditable(false);
     }
 

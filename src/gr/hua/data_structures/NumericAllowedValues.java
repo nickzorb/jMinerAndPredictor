@@ -5,7 +5,7 @@ public class NumericAllowedValues extends AllowedValues<Double> {
     public NumericAllowedValues() {
         super();
     }
-    
+
     private NumericAllowedValues(NumericAllowedValues old) {
         super(old);
     }

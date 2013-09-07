@@ -3,11 +3,11 @@ package gr.hua.data_structures;
 import weka.core.Instance;
 
 public class StringValue extends ColumnValue<String> {
-    
+
     public StringValue(String value) {
         super(value);
     }
-    
+
     private StringValue(ColumnValue<String> oldValue) {
         super(oldValue);
     }

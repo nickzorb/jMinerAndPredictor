@@ -8,7 +8,7 @@ public class LogisticRegressionPanel extends MiningMethodPanel {
         setName("Logistic Regression");
         title = "Logistic Regression";
     }
-    
+
     @Override
     public String info() {
         throw new UnsupportedOperationException("Not supported yet.");

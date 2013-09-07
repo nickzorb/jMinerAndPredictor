@@ -4,9 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
 public class SimpleLoggable implements Loggable, Cloneable {
-    
+
     private String sMessage;
     private String sSender;
     private String lTimeStamp;
@@ -17,7 +16,7 @@ public class SimpleLoggable implements Loggable, Cloneable {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         lTimeStamp = dateFormat.format(Calendar.getInstance().getTime());
     }
-    
+
     private SimpleLoggable(SimpleLoggable s) {
         sMessage = s.sMessage;
         sSender = s.sSender;

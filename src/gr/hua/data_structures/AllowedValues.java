@@ -7,21 +7,21 @@ public abstract class AllowedValues<T> implements Cloneable {
     private ArrayList<T> values = new ArrayList();
     private T min = null;
     private T max = null;
-    
+
     protected AllowedValues() {
         min = null;
         max = null;
     }
-    
+
     protected AllowedValues(AllowedValues<T> old) {
         min = old.min;
         max = old.max;
         values = new ArrayList();
-        for (T t:old.values) {
+        for (T t : old.values) {
             values.add(t);
         }
     }
-    
+
     public void allow(T value) {
         values.add(value);
     }
@@ -54,6 +54,6 @@ public abstract class AllowedValues<T> implements Cloneable {
     }
 
     public abstract boolean isAllowed(T value);
-    
+
     public abstract AllowedValues clone();
 }

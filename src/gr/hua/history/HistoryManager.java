@@ -55,7 +55,7 @@ public class HistoryManager<T> {
     public T getAlteredState() {
         return alteredState;
     }
-    
+
     public void setAlteredState(T state) {
         alteredState = state;
     }

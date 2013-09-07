@@ -43,8 +43,8 @@ public abstract class ColumnValue<T> implements Value<T>, Cloneable {
     public boolean isNull() {
         return curValue == null;
     }
-    
+
     public abstract void populateInstance(Instance ins, int attribute);
-    
+
     public abstract ColumnValue<T> clone();
 }

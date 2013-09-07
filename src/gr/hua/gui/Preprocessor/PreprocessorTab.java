@@ -13,17 +13,16 @@ import java.awt.BorderLayout;
  * @author r0t0r
  */
 public class PreprocessorTab extends Tab {
-    
+
     public PreprocessorTab(MainMenu parent, String title) {
-        super(parent,title);
+        super(parent, title);
         initComponents();
         container.setLayout(new BorderLayout());
         parent.registerComponent(MainMenu.DATA_AREAS, container);
         loadOptions();
     }
-    
-    private void loadOptions(){
-        
+
+    private void loadOptions() {
     }
 
     /**
@@ -215,13 +214,11 @@ public class PreprocessorTab extends Tab {
     }// </editor-fold>//GEN-END:initComponents
 
     private void undoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoBActionPerformed
-        
     }//GEN-LAST:event_undoBActionPerformed
 
     private void undoB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoB1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_undoB1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel container;
     private javax.swing.JButton jButton1;

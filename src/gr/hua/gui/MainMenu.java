@@ -25,7 +25,6 @@ public final class MainMenu extends JFrame implements JContainer {
             new HashMap();
     public static final DataManager MANAGER = new DataManager();
     public static MainMenu main;
-
     private ArrayList<Tab> tabs;
 
     @SuppressWarnings("LeakingThisInConstructor")

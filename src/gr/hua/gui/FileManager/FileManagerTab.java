@@ -77,8 +77,7 @@ public class FileManagerTab extends Tab {
             instancesCB.addItem(i + 1);
         }
         if (MainMenu.MANAGER.getColumnNames().length <= index1) {
-            attributesList.setSelectedIndex(MainMenu.MANAGER.getColumnNames()
-                    .length - 1);
+            attributesList.setSelectedIndex(MainMenu.MANAGER.getColumnNames().length - 1);
         } else {
             attributesList.setSelectedIndex(index1);
         }
@@ -438,7 +437,6 @@ public class FileManagerTab extends Tab {
             instanceInfoTA.setText(temp.info());
         }
     }//GEN-LAST:event_instancesCBActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea attributeInfoTA;
     private javax.swing.JList attributesList;

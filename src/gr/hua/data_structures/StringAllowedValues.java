@@ -5,7 +5,7 @@ public class StringAllowedValues extends AllowedValues<String> {
     public StringAllowedValues() {
         super();
     }
-    
+
     private StringAllowedValues(StringAllowedValues old) {
         super(old);
     }

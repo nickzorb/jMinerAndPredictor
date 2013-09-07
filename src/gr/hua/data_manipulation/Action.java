@@ -94,11 +94,11 @@ public class Action implements Serializable, Cloneable {
     public void setTarget(Object target) {
         this.target = target;
     }
-    
+
     public void addChange(Change c) {
         changes.add(c);
     }
-    
+
     public LinkedList<Change> getChanges() {
         return changes;
     }

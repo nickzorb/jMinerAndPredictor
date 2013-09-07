@@ -9,7 +9,6 @@ public class PropertiesLoader {
 
     public static final String ESCAPE_CHAR = "ESCAPE CHARACTER";
     public static final String STRING_SEPERATOR = "STRING SEPERATOR";
-    
     public static final String NEW_LINE = System.getProperty("line.separator");
     private static final String PROPERTIES_FILE_PATH = "./settings/jMnP.prop";
     private static final Properties PROPERTIES = new Properties();
@@ -67,11 +66,10 @@ public class PropertiesLoader {
         }
         return PROPERTIES.getProperty(s);
     }
-    
+
     public static void addProperty(final String key, final String property) {
         if (key == null || property == null) {
-            Logger.logError(new SimpleLoggable("Tried to save a null property"
-                    , PropertiesLoader.class));
+            Logger.logError(new SimpleLoggable("Tried to save a null property", PropertiesLoader.class));
         } else {
             PROPERTIES.put(key, property);
         }

@@ -14,23 +14,23 @@ public abstract class Tab extends javax.swing.JPanel {
 
     protected MainMenu parent;
     protected String title;
-    
+
     public Tab(MainMenu parent, String title) {
-        this.parent=parent;
-        this.title=title;
+        this.parent = parent;
+        this.title = title;
         initComponents();
     }
-    
-    public void setParent(MainMenu parent){
-        this.parent=parent;
+
+    public void setParent(MainMenu parent) {
+        this.parent = parent;
     }
-    
-    public String getTitle(){
+
+    public String getTitle() {
         return title;
     }
-    
-    public void setTitle(String title){
-        this.title=title;
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**

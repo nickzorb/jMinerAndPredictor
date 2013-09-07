@@ -14,17 +14,18 @@ import javax.swing.JOptionPane;
 public class FnRdialog extends javax.swing.JDialog {
 
     String[] res;
-    
+
     public FnRdialog(JFrame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
     }
-    
-    public String[] showDialog(){
+
+    public String[] showDialog() {
         this.setVisible(true);
         return res;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,26 +112,23 @@ public class FnRdialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBActionPerformed
-        res=null;
+        res = null;
         this.setVisible(false);
     }//GEN-LAST:event_cancelBActionPerformed
 
     private void input1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_input1ActionPerformed
-        
     }//GEN-LAST:event_input1ActionPerformed
 
     private void replaceBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceBActionPerformed
-        if (input1.getText().equals(input2.getText())){
-            res=null;
-        }
-        else {
-            res=new String[2];
-            res[0]=input1.getText();
-            res[1]=input2.getText();
+        if (input1.getText().equals(input2.getText())) {
+            res = null;
+        } else {
+            res = new String[2];
+            res[0] = input1.getText();
+            res[1] = input2.getText();
         }
         this.setVisible(false);
     }//GEN-LAST:event_replaceBActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelB;
     private javax.swing.JTextField input1;

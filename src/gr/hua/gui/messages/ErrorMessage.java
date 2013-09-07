@@ -28,12 +28,12 @@ public class ErrorMessage extends javax.swing.JFrame {
         this.setTitle("Message");
         this.setVisible(true);
     }
-    
+
     public ErrorMessage(String msg, List<String> errors, JFrame parent) {
         initComponents();
         this.setLocationRelativeTo(parent);
         jComboBox1.removeAllItems();
-        for (String s:errors){
+        for (String s : errors) {
             jComboBox1.addItem(s);
         }
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -106,7 +106,6 @@ public class ErrorMessage extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;

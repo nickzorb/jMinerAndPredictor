@@ -22,7 +22,7 @@ import weka.core.Instances;
 
 public class Trainer extends Thread {
 
-    private static final String CLASSIFIER_PATH = "./classifiers/";
+    public static final String TRAINED_CLASSIFIER_PATH = "./classifiers/";
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
@@ -41,6 +41,7 @@ public class Trainer extends Thread {
     private double max = 0;
     private final String[] descriptions = new String[TOP_RESULTS];
     private final String[] classifiers = new String[TOP_RESULTS];
+    private final String[] attributesFile = new String[TOP_RESULTS];
     private final FastVector[] usedAttributes = new FastVector[TOP_RESULTS];
     private final double[] results = new double[TOP_RESULTS];
     private double min = -1;
@@ -141,12 +142,14 @@ public class Trainer extends Thread {
                 if (results[pos] != 0) {
                     File f = new File(classifiers[pos]);
                     f.delete();
+                    f = new File(attributesFile[pos]);
+                    f.delete();
                 }
                 results[pos] = cur;
                 StringBuilder className;
                 className = new StringBuilder(classifier.getClass().toString());
                 className = className.delete(0, className.lastIndexOf(".") + 1);
-                StringBuilder curName = new StringBuilder(CLASSIFIER_PATH);
+                StringBuilder curName = new StringBuilder(TRAINED_CLASSIFIER_PATH);
                 SimpleDateFormat formatter = new SimpleDateFormat("_MM_dd_msS");
                 String curDate = formatter.format(
                         GregorianCalendar.getInstance().getTimeInMillis());
@@ -156,6 +159,14 @@ public class Trainer extends Thread {
                 try (ObjectOutputStream oos = new ObjectOutputStream(
                                 new GZIPOutputStream(os))) {
                     oos.writeObject(classifier);
+                }
+                curName.setLength(curName.length() - 6);
+                curName.append(".data");
+                attributesFile[pos] = curName.toString();
+                os = new FileOutputStream(curName.toString());
+                try (ObjectOutputStream oos = new ObjectOutputStream(
+                                new GZIPOutputStream(os))) {
+                    oos.writeObject(curAttributes);
                 }
                 descriptions[pos] = "";
                 usedAttributes[pos] = new FastVector(curAttributes.size());

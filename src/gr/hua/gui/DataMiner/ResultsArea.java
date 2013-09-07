@@ -24,7 +24,7 @@ public class ResultsArea extends javax.swing.JDialog {
     public void open() {
         setVisible(true);
     }
-    
+
     public void add(MiningResultsPanel panel) {
         container.add(panel);
     }

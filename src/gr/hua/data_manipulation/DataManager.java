@@ -219,8 +219,8 @@ public class DataManager implements ActionHandler {
         }
         return null;
     }
-    
-     public DataColumn getColumn(int i) {
+
+    public DataColumn getColumn(int i) {
         if (!ready) {
             return null;
         }
@@ -233,25 +233,25 @@ public class DataManager implements ActionHandler {
         }
         return null;
     }
-    
-     public int findColumn(String name) {
-         int counter = 0;
-         for (DataColumn d : columns.getLatestState()) {
-             if (d.getName().equals(name)) {
-                 return counter;
-             }
-             counter++;
-         }
-         return -1;
-     }
-     
+
+    public int findColumn(String name) {
+        int counter = 0;
+        for (DataColumn d : columns.getLatestState()) {
+            if (d.getName().equals(name)) {
+                return counter;
+            }
+            counter++;
+        }
+        return -1;
+    }
+
     public int getNumberOfRows() {
         if (!ready) {
             return -1;
         }
         return rows.getLatestState().size();
     }
-    
+
     public int getNumberOfColumns() {
         if (!ready) {
             return -1;
