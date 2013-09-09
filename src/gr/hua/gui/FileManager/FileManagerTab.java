@@ -337,6 +337,7 @@ public class FileManagerTab extends Tab {
         if (res == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
             filePath.setText(file.getAbsolutePath());
+            MainMenu.CURRENT_FILE = file.getName();
             loadFile();
         } else {
             file = null;

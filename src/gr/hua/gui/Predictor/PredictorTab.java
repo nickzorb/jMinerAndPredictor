@@ -14,13 +14,15 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.FastVector;
-
+import weka.core.Instance;
+import weka.core.Instances;
 /**
  *
  * @author r0t0r
@@ -322,6 +324,27 @@ public class PredictorTab extends Tab {
 
     private void predictBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictBActionPerformed
         for (int i = 0; i < classifiers.size(); i++) {
+            Classifier curClass = classifiers.get(i);
+            FastVector attributeSet = attributeSets.get(i);
+            Instances currentInstances = new Instances("prediction",attributeSet,1);
+            currentInstances.setClassIndex(attributeSet.size() - 1);
+            Instance curInstance = new Instance(attributeSet.size());
+            curInstance.setDataset(currentInstances);
+            currentInstances.add(curInstance);
+            for (int j = 0; j < attributeSet.size(); j++) {
+                Attribute curAttribute = (Attribute) attributeSet.elementAt(j);
+                if (values.get(curAttribute) == null) {
+                    curInstance.setMissing(j);
+                } else {
+                    curInstance.setValue(j, values.get(curAttribute));
+                }
+            }
+            try {
+                Double res = curClass.classifyInstance(curInstance);
+                System.out.println(res);
+            } catch (Exception ex) {
+                Logger.logException(ex);
+            }
         }
     }//GEN-LAST:event_predictBActionPerformed
 
@@ -365,7 +388,6 @@ public class PredictorTab extends Tab {
             selClassifierNames.add(classifierNames.get(indx1));
             classifierNames.remove(indx1);
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.logException(e);
         } finally {
             try {
@@ -380,6 +402,7 @@ public class PredictorTab extends Tab {
     private void changeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeBActionPerformed
         int indx = valuesCB.getSelectedIndex();
         values.put(attributes.get(indx3), (String) valuesCB.getItemAt(indx));
+        valueTF.setText((String) valuesCB.getItemAt(indx));
     }//GEN-LAST:event_changeBActionPerformed
 
     private void removeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBActionPerformed
@@ -407,11 +430,13 @@ public class PredictorTab extends Tab {
         while (m.hasMoreElements()) {
             valuesCB.addItem(m.nextElement());
         }
+        String curValue = values.get(curAttr);
+        valueTF.setText(curValue == null? "" : curValue);
     }//GEN-LAST:event_attributesLMouseClicked
 
     private void refressBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refressBActionPerformed
         if (JOptionPane.showConfirmDialog(this, "Are you sure?\n "
-                + "This will reste all current selections and attempt to\n"
+                + "This will reset all current selections and attempt to\n"
                 + "load all available classifiers\n", "Reset",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             init();

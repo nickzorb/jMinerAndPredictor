@@ -4,6 +4,7 @@ import gr.hua.data_structures.DataRow;
 import gr.hua.gui.DataMiner.MiningResultsPanel;
 import gr.hua.gui.MainMenu;
 import gr.hua.utils.Logger;
+import gr.hua.utils.SimpleLoggable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -21,12 +22,13 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 public class Trainer extends Thread {
-
+    
     public static final String TRAINED_CLASSIFIER_PATH = "./classifiers/";
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
+    public static final String SET_TOP_RESULTS = "-top";
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
-    private final int TOP_RESULTS = 10;
+    private int TOP_RESULTS = 3;
     private Classifier classifier;
     private MiningResultsPanel outputPanel;
     private ArrayList<Instance> instances = new ArrayList();
@@ -45,7 +47,7 @@ public class Trainer extends Thread {
     private final FastVector[] usedAttributes = new FastVector[TOP_RESULTS];
     private final double[] results = new double[TOP_RESULTS];
     private double min = -1;
-
+    
     public Trainer(Classifier c, MiningResultsPanel output,
             ArrayList<CloneableAttribute> attrs,
             CloneableAttribute targetAttr, Properties p) {
@@ -58,11 +60,11 @@ public class Trainer extends Thread {
         properties = p;
         target = targetAttr.clone();
     }
-
+    
     public void stopMining() {
         run = false;
     }
-
+    
     private void loopAttributes(int startingIndex, int attributesNumber)
             throws Exception {
         if (attributesNumber == 0) {
@@ -80,7 +82,7 @@ public class Trainer extends Thread {
             curAttributes.removeElementAt(n - attributesNumber);
         }
     }
-
+    
     private void buildInstances() throws Exception {
         int limit = MainMenu.MANAGER.getNumberOfRows();
         //Setup training set
@@ -97,12 +99,12 @@ public class Trainer extends Thread {
         }
         collectOptions();
     }
-
+    
     private void collectOptions() {
         //TODO manage classifiers options
         buildClassifier();
     }
-
+    
     private void buildClassifier() {
         if (outputPanel.getStatus() == STOPPED) {
             synchronized (outputPanel.getLock()) {
@@ -150,9 +152,10 @@ public class Trainer extends Thread {
                 className = new StringBuilder(classifier.getClass().toString());
                 className = className.delete(0, className.lastIndexOf(".") + 1);
                 StringBuilder curName = new StringBuilder(TRAINED_CLASSIFIER_PATH);
-                SimpleDateFormat formatter = new SimpleDateFormat("_MM_dd_msS");
+                SimpleDateFormat formatter = new SimpleDateFormat("_MM_dd_m-S");
                 String curDate = formatter.format(
                         GregorianCalendar.getInstance().getTimeInMillis());
+                curName.append(MainMenu.CURRENT_FILE.substring(0, MainMenu.CURRENT_FILE.indexOf("."))).append("_");
                 curName.append(className).append(curDate).append(".model");
                 classifiers[pos] = curName.toString();
                 OutputStream os = new FileOutputStream(curName.toString());
@@ -184,11 +187,23 @@ public class Trainer extends Thread {
             Logger.logException(e);
         }
     }
-
+    
     @Override
     public void run() {
         try {
             //Setup attributes and run training
+            if (properties.getProperty(SET_TOP_RESULTS) != null) {
+                try {
+                    int n = Integer.parseInt(properties.getProperty(SET_TOP_RESULTS));
+                    if (n > 0) {
+                        TOP_RESULTS = n;
+                    } else {
+                        Logger.logError(new SimpleLoggable("Invalid top results count", this));
+                    }
+                } catch (Exception e) {
+                    Logger.logException(e);
+                }
+            }
             if (properties.getProperty(OPTIMIZE_ATTRIBUTES) != null) {
                 while (run) {
                     curAttributes = new FastVector(n + 1);

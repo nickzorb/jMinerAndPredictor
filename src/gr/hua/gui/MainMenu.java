@@ -21,6 +21,7 @@ public final class MainMenu extends JFrame implements JContainer {
     public static final String LOG_AREAS = "LOG AREA";
     public static final String DATA_AREAS = "DATA AREA";
     public static final String MAIN_WINDOW = "ORIGIN";
+    public static String CURRENT_FILE = null;
     public static final HashMap<String, ArrayList<Component>> COMPONENTS =
             new HashMap();
     public static final DataManager MANAGER = new DataManager();
