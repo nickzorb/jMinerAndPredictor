@@ -91,6 +91,11 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     @Override
     public int find(String value) {
         if (value == null) {
+            for (int i = 0; i < values.size(); i++) {
+                if (values.get(i).isNull()) {
+                    return i;
+                }
+            }
             return -1;
         }
         for (int i = 0; i < values.size(); i++) {
@@ -101,15 +106,55 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         return -1;
     }
 
+    private int totalPopulation() {
+        int res = 0;
+        for (ColumnValue cv : values) {
+            res += cv.getPopulation();
+        }
+        return res;
+    }
+    
     @Override
     public double nullPercentage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (ColumnValue cv : values) {
+            if (cv.isNull()) {
+                return (double) cv.getPopulation() / (double) totalPopulation();
+            }
+        }
+        return 0;
+    }
+
+    private String gatherNumericalStatistics() {
+        StringBuilder res = new StringBuilder("->Name: ").append(name);
+        res.append("\n    ->Total Population: ").append(totalPopulation());
+        res.append("\n    ->Null Percentage: ").append(nullPercentage() * 100);
+        res.append("%");
+        res.append("\n    ->Type: Numerical\n    ->Statistics:");
+        return res.toString();
+    }
+    
+    private String gatherNominalStatistics() {
+        StringBuilder res = new StringBuilder("->Name: ").append(name);
+        res.append("\n    ->Total Population: ").append(totalPopulation());
+        res.append("\n    ->Null Percentage: ").append(nullPercentage() * 100);
+        res.append("%");
+        res.append("\n    ->Type: Nominal\n    ->VALUES:");
+        for (ColumnValue cv : values) {
+            if (!cv.isNull()) {
+                res.append("\n        ->").append(cv.getValue());
+                res.append(" : ").append(cv.curPopulation);
+            }
+        }
+        return res.toString();
     }
 
     @Override
     public String info() {
-        //TODO INFO
-        return "This is some info! (that ! was logical not punctuation)";
+        if (type == String.class) {
+            return gatherNominalStatistics();
+        } else {
+            return gatherNumericalStatistics();
+        }
     }
 
     @Override

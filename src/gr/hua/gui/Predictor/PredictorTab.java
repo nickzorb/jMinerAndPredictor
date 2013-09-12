@@ -17,12 +17,16 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+
 /**
  *
  * @author r0t0r
@@ -34,7 +38,7 @@ public class PredictorTab extends Tab {
     private ArrayList<String> selClassifierNames;
     private ArrayList<Classifier> classifiers;
     private ArrayList<FastVector> attributeSets;
-    private HashMap<Attribute, String> values;
+    private HashMap<Integer, String> values;
     private DefaultListModel attributesModel = new DefaultListModel();
     private DefaultListModel classifiersModel = new DefaultListModel();
     private DefaultListModel loadedClassifiersModel = new DefaultListModel();
@@ -55,6 +59,12 @@ public class PredictorTab extends Tab {
         classifiers = new ArrayList();
         attributeSets = new ArrayList();
         values = new HashMap();
+        attributesL.setSelectionMode(
+                DefaultListSelectionModel.SINGLE_SELECTION);
+        classifiersL.setSelectionMode(
+                DefaultListSelectionModel.SINGLE_SELECTION);
+        loadedClassifiersL.setSelectionMode(
+                DefaultListSelectionModel.SINGLE_SELECTION);
         attributesL.setModel(attributesModel);
         classifiersL.setModel(classifiersModel);
         loadedClassifiersL.setModel(loadedClassifiersModel);
@@ -178,6 +188,7 @@ public class PredictorTab extends Tab {
 
         resultsTA.setColumns(20);
         resultsTA.setRows(5);
+        resultsTA.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         resultsTA.setEnabled(false);
         jScrollPane3.setViewportView(resultsTA);
 
@@ -243,14 +254,13 @@ public class PredictorTab extends Tab {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(71, 71, 71)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(71, 71, 71)
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
                                         .addComponent(valueTF, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(71, 71, 71)
                                         .addComponent(jLabel4)
                                         .addGap(18, 18, 18)
                                         .addComponent(valuesCB, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -323,29 +333,37 @@ public class PredictorTab extends Tab {
     }// </editor-fold>//GEN-END:initComponents
 
     private void predictBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictBActionPerformed
+        StringBuilder result = new StringBuilder("Results: \n\t");
         for (int i = 0; i < classifiers.size(); i++) {
             Classifier curClass = classifiers.get(i);
+            result.append(curClass.getClass()).append(":\n");
             FastVector attributeSet = attributeSets.get(i);
-            Instances currentInstances = new Instances("prediction",attributeSet,1);
+            Instances currentInstances = new Instances("prediction", attributeSet, 1);
             currentInstances.setClassIndex(attributeSet.size() - 1);
             Instance curInstance = new Instance(attributeSet.size());
             curInstance.setDataset(currentInstances);
             currentInstances.add(curInstance);
             for (int j = 0; j < attributeSet.size(); j++) {
                 Attribute curAttribute = (Attribute) attributeSet.elementAt(j);
-                if (values.get(curAttribute) == null) {
+                result.append("'").append(curAttribute.name()).append("' : '");
+                if (values.get(attributes.indexOf(curAttribute)) == null) {
+                    result.append("', ");
                     curInstance.setMissing(j);
                 } else {
-                    curInstance.setValue(j, values.get(curAttribute));
+                    result.append(values.get(attributes.indexOf(curAttribute))).append("', ");
+                    curInstance.setValue(j, values.get(attributes.indexOf(curAttribute)));
                 }
             }
             try {
                 Double res = curClass.classifyInstance(curInstance);
-                System.out.println(res);
+                result.setLength(result.length() - 2);
+                result.append("\n").append("\t\tPrediction: ").append(res);
+                result.append("\n\t");
             } catch (Exception ex) {
                 Logger.logException(ex);
             }
         }
+        resultsTA.setText(result.toString());
     }//GEN-LAST:event_predictBActionPerformed
 
     private void onFocusGained(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_onFocusGained
@@ -401,7 +419,7 @@ public class PredictorTab extends Tab {
 
     private void changeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeBActionPerformed
         int indx = valuesCB.getSelectedIndex();
-        values.put(attributes.get(indx3), (String) valuesCB.getItemAt(indx));
+        values.put(indx3, (String) valuesCB.getItemAt(indx));
         valueTF.setText((String) valuesCB.getItemAt(indx));
     }//GEN-LAST:event_changeBActionPerformed
 
@@ -431,7 +449,7 @@ public class PredictorTab extends Tab {
             valuesCB.addItem(m.nextElement());
         }
         String curValue = values.get(curAttr);
-        valueTF.setText(curValue == null? "" : curValue);
+        valueTF.setText(curValue == null ? "" : curValue);
     }//GEN-LAST:event_attributesLMouseClicked
 
     private void refressBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refressBActionPerformed

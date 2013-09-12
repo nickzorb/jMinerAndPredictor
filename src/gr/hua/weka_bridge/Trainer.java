@@ -22,7 +22,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 public class Trainer extends Thread {
-    
+
     public static final String TRAINED_CLASSIFIER_PATH = "./classifiers/";
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final String SET_TOP_RESULTS = "-top";
@@ -47,7 +47,7 @@ public class Trainer extends Thread {
     private final FastVector[] usedAttributes = new FastVector[TOP_RESULTS];
     private final double[] results = new double[TOP_RESULTS];
     private double min = -1;
-    
+
     public Trainer(Classifier c, MiningResultsPanel output,
             ArrayList<CloneableAttribute> attrs,
             CloneableAttribute targetAttr, Properties p) {
@@ -60,11 +60,11 @@ public class Trainer extends Thread {
         properties = p;
         target = targetAttr.clone();
     }
-    
+
     public void stopMining() {
         run = false;
     }
-    
+
     private void loopAttributes(int startingIndex, int attributesNumber)
             throws Exception {
         if (attributesNumber == 0) {
@@ -82,7 +82,7 @@ public class Trainer extends Thread {
             curAttributes.removeElementAt(n - attributesNumber);
         }
     }
-    
+
     private void buildInstances() throws Exception {
         int limit = MainMenu.MANAGER.getNumberOfRows();
         //Setup training set
@@ -99,12 +99,12 @@ public class Trainer extends Thread {
         }
         collectOptions();
     }
-    
+
     private void collectOptions() {
         //TODO manage classifiers options
         buildClassifier();
     }
-    
+
     private void buildClassifier() {
         if (outputPanel.getStatus() == STOPPED) {
             synchronized (outputPanel.getLock()) {
@@ -187,7 +187,7 @@ public class Trainer extends Thread {
             Logger.logException(e);
         }
     }
-    
+
     @Override
     public void run() {
         try {
@@ -218,13 +218,15 @@ public class Trainer extends Thread {
                     }
                 }
             } else {
-                n = attributes.size() + 1;
-                curAttributes = new FastVector(n);
+                n = attributes.size();
+                curAttributes = new FastVector(n + 1);
                 for (CloneableAttribute att : attributes) {
                     curAttributes.addElement(att);
                 }
                 curAttributes.addElement(target);
                 buildInstances();
+                outputPanel.showFinishedScreen(usedAttributes, results,
+                                descriptions, classifiers);
             }
         } catch (Exception e) {
             Logger.logException(e);

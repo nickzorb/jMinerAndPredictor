@@ -9,6 +9,7 @@ import gr.hua.weka_bridge.Trainer;
 import java.util.ArrayList;
 import java.util.Properties;
 import weka.classifiers.Classifier;
+import weka.classifiers.meta.RotationForest;
 
 /**
  *
@@ -20,12 +21,14 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     public static final int LOGISTIC_REGRESSION = 1;
     public static final int J48_TREE = 2;
     public static final int NEURAL_NETWORK = 3;
-    public static final int[] methods = {NAIVE_BAYES, LOGISTIC_REGRESSION, J48_TREE, NEURAL_NETWORK};
+    public static final int ROTATION_FOREST = 4;
+    public static final int[] methods = {NAIVE_BAYES, LOGISTIC_REGRESSION, J48_TREE, NEURAL_NETWORK, ROTATION_FOREST};
     private static final NaiveBayesPanel nbayes = new NaiveBayesPanel();
     private static final LogisticRegressionPanel lregr = new LogisticRegressionPanel();
     private static final J48Panel j48 = new J48Panel();
     private static final NeuralNetworkPanel nnet = new NeuralNetworkPanel();
-    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet};
+    private static final RotationForestPanel rfrst = new RotationForestPanel();
+    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, rfrst};
     protected ArrayList<CloneableAttribute> attributes;
     protected CloneableAttribute target;
     protected Properties properties;

@@ -45,6 +45,7 @@ public class FileManagerTab extends Tab {
                     DataColumn temp = MainMenu.MANAGER.getColumn(attributesList.getSelectedIndex());
                     if (temp != null) {
                         attributeInfoTA.setText(temp.info());
+                        attributeInfoTA.setCaretPosition(0);
                     }
                 }
             }
@@ -112,7 +113,7 @@ public class FileManagerTab extends Tab {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         instanceInfoTA = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        attributeInfoContainer = new javax.swing.JScrollPane();
         attributeInfoTA = new javax.swing.JTextArea();
         instancesCB = new javax.swing.JComboBox();
         deleteAttributeB = new javax.swing.JButton();
@@ -188,13 +189,15 @@ public class FileManagerTab extends Tab {
 
         instanceInfoTA.setColumns(20);
         instanceInfoTA.setRows(5);
+        instanceInfoTA.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         instanceInfoTA.setEnabled(false);
         jScrollPane1.setViewportView(instanceInfoTA);
 
         attributeInfoTA.setColumns(20);
         attributeInfoTA.setRows(5);
+        attributeInfoTA.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         attributeInfoTA.setEnabled(false);
-        jScrollPane3.setViewportView(attributeInfoTA);
+        attributeInfoContainer.setViewportView(attributeInfoTA);
 
         instancesCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         instancesCB.addActionListener(new java.awt.event.ActionListener() {
@@ -214,6 +217,7 @@ public class FileManagerTab extends Tab {
 
         logArea.setColumns(20);
         logArea.setRows(5);
+        logArea.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         logArea.setEnabled(false);
         jScrollPane4.setViewportView(logArea);
 
@@ -248,7 +252,7 @@ public class FileManagerTab extends Tab {
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel4)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane3)))
+                                    .addComponent(attributeInfoContainer)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(107, 107, 107)
                                 .addComponent(deleteAttributeB)))
@@ -301,7 +305,7 @@ public class FileManagerTab extends Tab {
                                 .addGap(11, 11, 11)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane3))
+                                .addComponent(attributeInfoContainer))
                             .addComponent(jScrollPane4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -436,9 +440,11 @@ public class FileManagerTab extends Tab {
         DataRow temp = MainMenu.MANAGER.get(instancesCB.getSelectedIndex());
         if (temp != null) {
             instanceInfoTA.setText(temp.info());
+            instanceInfoTA.setCaretPosition(0);
         }
     }//GEN-LAST:event_instancesCBActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane attributeInfoContainer;
     private javax.swing.JTextArea attributeInfoTA;
     private javax.swing.JList attributesList;
     private javax.swing.JButton browseB;
@@ -454,7 +460,6 @@ public class FileManagerTab extends Tab {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea logArea;
     private javax.swing.JButton openFileB;

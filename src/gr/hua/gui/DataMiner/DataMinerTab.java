@@ -14,6 +14,8 @@ import java.util.Properties;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -38,6 +40,9 @@ public class DataMinerTab extends Tab {
             miningMethods.add(MiningMethodPanel.getInstance(i));
             alMiningMethods.add(MiningMethodPanel.getInstance(i));
         }
+        topResultsSP.setEnabled(false);
+        topResultsSP.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+        resultsL.setEnabled(false);
         miningMethods.revalidate();
     }
 
@@ -90,7 +95,7 @@ public class DataMinerTab extends Tab {
     }
 
     private void collectProperties(Properties p) {
-        if (autoAttributesCB.isSelected()) {
+        if (autoAttributesCB.isSelected() || autoSelAttributesCB.isSelected()) {
             p.setProperty(Trainer.OPTIMIZE_ATTRIBUTES, "ON");
         }
     }
@@ -122,6 +127,10 @@ public class DataMinerTab extends Tab {
         miningMethods = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
+        autoSelAttributesCB = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        resultsL = new javax.swing.JLabel();
+        topResultsSP = new javax.swing.JSpinner();
 
         setMaximumSize(new java.awt.Dimension(800, 640));
         setMinimumSize(new java.awt.Dimension(800, 640));
@@ -202,7 +211,7 @@ public class DataMinerTab extends Tab {
             }
         });
 
-        autoAttributesCB.setText("Choose Attributes automatically");
+        autoAttributesCB.setText("Choose Attributes automatically from all attributes");
         autoAttributesCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoAttributesCBActionPerformed(evt);
@@ -228,6 +237,17 @@ public class DataMinerTab extends Tab {
 
         jLabel2.setText("Select optimizations:");
 
+        autoSelAttributesCB.setText("Choose automatically only");
+        autoSelAttributesCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoSelAttributesCBActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("from those selected above");
+
+        resultsL.setText("Top results to save:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -235,41 +255,51 @@ public class DataMinerTab extends Tab {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(container)
+                    .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel39, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(114, 114, 114))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(valuesScr, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(addB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(removeB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(valuesScr1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(autoAttributesCB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel37, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(valuesScr2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(valuesScr, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(addB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(removeB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(autoAttributesCB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(122, 122, 122)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(valuesScr1, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                                            .addComponent(autoSelAttributesCB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel37, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(resultsL)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(topResultsSP)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(mineB)
-                                .addGap(10, 10, 10)))))
+                                .addGap(14, 14, 14))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(valuesScr2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -299,14 +329,20 @@ public class DataMinerTab extends Tab {
                             .addComponent(valuesScr1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(7, 7, 7)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(autoAttributesCB, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mineB)
-                    .addComponent(jLabel38))
+                    .addComponent(autoAttributesCB, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(autoSelAttributesCB))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel38)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(resultsL)
+                        .addComponent(topResultsSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mineB)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -343,7 +379,6 @@ public class DataMinerTab extends Tab {
         ResultsArea resArea = new ResultsArea(MainMenu.main, true);
         Properties prop = new Properties();
         collectProperties(prop);
-        //TODO ADD PROPERTIES
         CloneableAttribute target = (CloneableAttribute) ((JListItem) targetList.getSelectedValue()).getValue();
         ArrayList<CloneableAttribute> selColumns = new ArrayList();
         for (JListItem j : columns) {
@@ -369,19 +404,31 @@ public class DataMinerTab extends Tab {
     private void autoAttributesCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAttributesCBActionPerformed
         columnsList.setEnabled(!autoAttributesCB.isSelected());
         selColumnsList.setEnabled(!autoAttributesCB.isSelected());
+        autoSelAttributesCB.setEnabled(!autoAttributesCB.isSelected());
+        topResultsSP.setEnabled(autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected());
+        resultsL.setEnabled(autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected());
     }//GEN-LAST:event_autoAttributesCBActionPerformed
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         initColumns();
         loadMiner();
     }//GEN-LAST:event_formComponentShown
+
+    private void autoSelAttributesCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoSelAttributesCBActionPerformed
+        autoAttributesCB.setEnabled(!autoSelAttributesCB.isSelected());
+        topResultsSP.setEnabled(autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected());
+        resultsL.setEnabled(autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected());
+    }//GEN-LAST:event_autoSelAttributesCBActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addB;
     private javax.swing.JCheckBox autoAttributesCB;
+    private javax.swing.JCheckBox autoSelAttributesCB;
     private javax.swing.JList columnsList;
     private javax.swing.JScrollPane container;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
@@ -389,8 +436,10 @@ public class DataMinerTab extends Tab {
     private javax.swing.JButton mineB;
     private javax.swing.JPanel miningMethods;
     private javax.swing.JButton removeB;
+    private javax.swing.JLabel resultsL;
     private javax.swing.JList selColumnsList;
     private javax.swing.JList targetList;
+    private javax.swing.JSpinner topResultsSP;
     private javax.swing.JScrollPane valuesScr;
     private javax.swing.JScrollPane valuesScr1;
     private javax.swing.JScrollPane valuesScr2;

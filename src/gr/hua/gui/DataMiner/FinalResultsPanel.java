@@ -33,6 +33,9 @@ public class FinalResultsPanel extends javax.swing.JPanel {
         sort();
         classifiersCB.removeAllItems();
         for (String s : classifiers) {
+            if (s == null) {
+                continue;
+            }
             String name = s;
             while (name.contains("/")) {
                 name = name.substring(name.indexOf("/") + 1);
