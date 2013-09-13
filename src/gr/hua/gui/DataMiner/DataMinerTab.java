@@ -97,9 +97,22 @@ public class DataMinerTab extends Tab {
     private void collectProperties(Properties p) {
         if (autoAttributesCB.isSelected() || autoSelAttributesCB.isSelected()) {
             p.setProperty(Trainer.OPTIMIZE_ATTRIBUTES, "ON");
+            p.setProperty(Trainer.SET_TOP_RESULTS, topResultsSP.getValue().toString());
         }
     }
-
+    
+    private CloneableAttribute targetAttribute() {
+        JListItem item = (JListItem) targetList.getSelectedValue();
+        String name = ((CloneableAttribute) item.getValue()).name();
+        String[] names = MainMenu.MANAGER.getColumnNames();
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].equals(name)) {
+                return MainMenu.MANAGER.getColumn(i).getForcedNominalAttribute();
+            }
+        }
+        return null;
+    }
+            
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -379,13 +392,21 @@ public class DataMinerTab extends Tab {
         ResultsArea resArea = new ResultsArea(MainMenu.main, true);
         Properties prop = new Properties();
         collectProperties(prop);
-        CloneableAttribute target = (CloneableAttribute) ((JListItem) targetList.getSelectedValue()).getValue();
+        CloneableAttribute target = targetAttribute();
+        if (target == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Couldn't turn target column into a nominal attribute!");
+            return;
+        }
         ArrayList<CloneableAttribute> selColumns = new ArrayList();
         for (JListItem j : columns) {
             if (!autoAttributesCB.isSelected() && j.getParent() == selColumnsList) {
                 selColumns.add((CloneableAttribute) j.getValue());
-            } else if (autoAttributesCB.isSelected() && j.getValue() != target) {
-                selColumns.add((CloneableAttribute) j.getValue());
+            } else if (autoAttributesCB.isSelected()) {
+                String name = ((CloneableAttribute) j.getValue()).name();
+                if (!name.equals(target.name())) {
+                    selColumns.add((CloneableAttribute) j.getValue());
+                }
             }
         }
         for (MiningMethodPanel m : alMiningMethods) {

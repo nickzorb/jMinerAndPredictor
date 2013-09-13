@@ -2,7 +2,7 @@ package gr.hua.data_structures;
 
 import weka.core.Instance;
 
-public class StringValue extends ColumnValue<String> {
+public class StringValue extends ColumnValue<String> implements Cloneable{
 
     public StringValue(String value) {
         super(value);
@@ -18,16 +18,16 @@ public class StringValue extends ColumnValue<String> {
     }
 
     @Override
-    public ColumnValue<String> clone() {
-        return new StringValue(this);
-    }
-
-    @Override
     public void populateInstance(Instance ins, int attribute) {
         if (curValue == null) {
             ins.setMissing(attribute);
         } else {
             ins.setValue(attribute, curValue);
         }
+    }
+
+    @Override
+    public ColumnValue<String> clone() {
+        return new StringValue(this);
     }
 }

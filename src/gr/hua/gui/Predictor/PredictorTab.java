@@ -14,13 +14,11 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JOptionPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.SpinnerNumberModel;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.FastVector;
@@ -80,6 +78,11 @@ public class PredictorTab extends Tab {
                 }
             }
         }
+        valuesCB.setEnabled(false);
+        valuesSP.setEnabled(false);
+        SpinnerNumberModel spmodel = new SpinnerNumberModel(0,
+                Double.NEGATIVE_INFINITY, Double.MAX_VALUE, Double.MIN_VALUE);
+        valuesSP.setModel(spmodel);
     }
 
     private void load() {
@@ -145,6 +148,7 @@ public class PredictorTab extends Tab {
         loadedClassifiersL = new javax.swing.JList();
         removeB = new javax.swing.JButton();
         refressB = new javax.swing.JButton();
+        valuesSP = new javax.swing.JSpinner();
 
         setMinimumSize(new java.awt.Dimension(800, 640));
         setPreferredSize(new java.awt.Dimension(800, 640));
@@ -262,8 +266,10 @@ public class PredictorTab extends Tab {
                                         .addComponent(valueTF, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(valuesCB, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(valuesSP, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(valuesCB, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(predictB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -319,7 +325,8 @@ public class PredictorTab extends Tab {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(changeB)
                             .addComponent(valuesCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(valuesSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(predictB))
                     .addGroup(layout.createSequentialGroup()
@@ -351,7 +358,22 @@ public class PredictorTab extends Tab {
                     curInstance.setMissing(j);
                 } else {
                     result.append(values.get(attributes.indexOf(curAttribute))).append("', ");
-                    curInstance.setValue(j, values.get(attributes.indexOf(curAttribute)));
+                    if (curAttribute.isNominal()) {
+                        curInstance.setValue(j, values.get(attributes.indexOf(curAttribute)));
+                    } else {
+                        String sValue = values.get(attributes.indexOf(curAttribute));
+                        Double dValue = Double.parseDouble(sValue);
+                        if (dValue.toString().equals(sValue)) {
+                            curInstance.setValue(j, dValue);
+                        } else {
+                            Integer iValue = Integer.parseInt(sValue);
+                            if (iValue.toString().equals(sValue)) {
+                                curInstance.setValue(j, iValue);
+                            } else {
+                                curInstance.setMissing(j);
+                            }
+                        }
+                    }
                 }
             }
             try {
@@ -418,9 +440,14 @@ public class PredictorTab extends Tab {
     }//GEN-LAST:event_loadBActionPerformed
 
     private void changeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeBActionPerformed
-        int indx = valuesCB.getSelectedIndex();
-        values.put(indx3, (String) valuesCB.getItemAt(indx));
-        valueTF.setText((String) valuesCB.getItemAt(indx));
+        if (valuesCB.isEnabled()) {
+            int indx = valuesCB.getSelectedIndex();
+            values.put(indx3, (String) valuesCB.getItemAt(indx));
+            valueTF.setText((String) valuesCB.getItemAt(indx));
+        } else if (valuesSP.isEnabled()) {
+            values.put(indx3, valuesSP.getValue().toString());
+            valueTF.setText(values.get(indx3));
+        }
     }//GEN-LAST:event_changeBActionPerformed
 
     private void removeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBActionPerformed
@@ -444,11 +471,18 @@ public class PredictorTab extends Tab {
         }
         Attribute curAttr = attributes.get(indx3);
         valuesCB.removeAllItems();
-        Enumeration m = curAttr.enumerateValues();
-        while (m.hasMoreElements()) {
-            valuesCB.addItem(m.nextElement());
+        if (curAttr.isNominal()) {
+            valuesCB.setEnabled(true);
+            valuesSP.setEnabled(false);
+            Enumeration m = curAttr.enumerateValues();
+            while (m.hasMoreElements()) {
+                valuesCB.addItem(m.nextElement());
+            }
+        } else {
+            valuesCB.setEnabled(false);
+            valuesSP.setEnabled(true);
         }
-        String curValue = values.get(curAttr);
+        String curValue = values.get(indx3);
         valueTF.setText(curValue == null ? "" : curValue);
     }//GEN-LAST:event_attributesLMouseClicked
 
@@ -483,5 +517,6 @@ public class PredictorTab extends Tab {
     private javax.swing.JTextArea resultsTA;
     private javax.swing.JTextField valueTF;
     private javax.swing.JComboBox valuesCB;
+    private javax.swing.JSpinner valuesSP;
     // End of variables declaration//GEN-END:variables
 }

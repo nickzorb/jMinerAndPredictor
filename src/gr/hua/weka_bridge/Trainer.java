@@ -113,6 +113,7 @@ public class Trainer extends Thread {
                     outputPanel.getLock().wait();
                 } catch (InterruptedException ex) {
                     Logger.logException(ex);
+                    ex.printStackTrace();
                 }
             }
         }
@@ -177,14 +178,15 @@ public class Trainer extends Thread {
                     usedAttributes[pos].addElement(o);
                 }
                 min = cur;
-                for (double d : results) {
-                    if (d < min) {
-                        min = d;
+                for (int i = 0; i < TOP_RESULTS; i++) {
+                    if (results[i] < min) {
+                        min = results[i];
                     }
                 }
             }
         } catch (Exception e) {
             Logger.logException(e);
+            e.printStackTrace();
         }
     }
 
@@ -226,10 +228,11 @@ public class Trainer extends Thread {
                 curAttributes.addElement(target);
                 buildInstances();
                 outputPanel.showFinishedScreen(usedAttributes, results,
-                                descriptions, classifiers);
+                        descriptions, classifiers);
             }
         } catch (Exception e) {
             Logger.logException(e);
+            e.printStackTrace();
             run = false;
         }
     }

@@ -1,11 +1,18 @@
 package gr.hua.data_structures;
 
+import java.util.concurrent.atomic.AtomicLong;
 import weka.core.Instance;
 
 public abstract class ColumnValue<T> implements Value<T>, Cloneable {
 
+    private static final AtomicLong nextId = new AtomicLong();
+    
     protected int curPopulation;
     protected T curValue;
+    /**
+     * this is used to avoid conflicts between identical column values.
+     */
+    private final long id = nextId.incrementAndGet();
 
     public ColumnValue(T value) {
         curValue = value;

@@ -66,6 +66,9 @@ public class FileManagerTab extends Tab {
     }
 
     private void refress() {
+        if (MainMenu.MANAGER.ready()) {
+            MainMenu.MANAGER.validate();
+        }
         instancesCB.removeAllItems();
         attributesL.removeAllElements();
         if (!MainMenu.MANAGER.ready()) {

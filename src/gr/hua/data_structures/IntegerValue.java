@@ -4,6 +4,10 @@ import weka.core.Instance;
 
 public class IntegerValue extends ColumnValue<Integer> implements Cloneable {
 
+    public IntegerValue(Integer value) {
+        super(value);
+    }
+    
     private IntegerValue(ColumnValue<Integer> oldValue) {
         super(oldValue);
     }
@@ -14,12 +18,16 @@ public class IntegerValue extends ColumnValue<Integer> implements Cloneable {
     }
 
     @Override
-    public IntegerValue clone() {
-        return new IntegerValue(this);
-    }
-
-    @Override
     public void populateInstance(Instance ins, int attribute) {
-        ins.setValue(attribute, curValue);
+        if (curValue == null) {
+            ins.setMissing(attribute);
+        } else {
+            ins.setValue(attribute, curValue);
+        }
+    }
+    
+    @Override
+    public ColumnValue<Integer> clone() {
+        return new IntegerValue(this);
     }
 }
