@@ -14,6 +14,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -23,6 +26,17 @@ import javax.swing.event.ListSelectionListener;
  */
 public class FileManagerTab extends Tab {
 
+    //Looks and feels
+    private String[] laf = {
+         "com.jtattoo.plaf.texture.TextureLookAndFeel",
+         "com.jtattoo.plaf.aluminium.AluminiumLookAndFeel",
+         "com.jtattoo.plaf.mint.MintLookAndFeel",
+         "javax.swing.plaf.nimbus.NimbusLookAndFeel",
+         UIManager.getSystemLookAndFeelClassName()
+         
+    };
+    private int selectedLaf = 0;
+    
     private int index1 = 0, index2 = 0;
     private FileOptionsDialog optionsD;
     private File file = null;
@@ -52,6 +66,13 @@ public class FileManagerTab extends Tab {
         });
         instancesCB.removeAllItems();
         attributesL.removeAllElements();
+        //because otherwise the laf gets all confused
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setLaF();
+            }
+        });
     }
 
     private void loadFile() {
@@ -91,6 +112,16 @@ public class FileManagerTab extends Tab {
             instancesCB.setSelectedIndex(index2);
         }
     }
+    
+    private void setLaF() {
+        try {
+            UIManager.setLookAndFeel(laf[selectedLaf]);
+            SwingUtilities.updateComponentTreeUI(MainMenu.main);
+            MainMenu.main.pack();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            Logger.logException(e);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -123,6 +154,7 @@ public class FileManagerTab extends Tab {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         logArea = new javax.swing.JTextArea();
+        changeLookB = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(800, 640));
         setMinimumSize(new java.awt.Dimension(800, 640));
@@ -168,9 +200,9 @@ public class FileManagerTab extends Tab {
             }
         });
 
-        jLabel1.setText("Instances Loaded: ");
+        jLabel1.setText("Instances (Rows): ");
 
-        jLabel3.setText("Attributes(Columns):");
+        jLabel3.setText("Attributes (Columns):");
 
         attributesList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -224,6 +256,13 @@ public class FileManagerTab extends Tab {
         logArea.setEnabled(false);
         jScrollPane4.setViewportView(logArea);
 
+        changeLookB.setText("Change Look");
+        changeLookB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeLookBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -262,11 +301,13 @@ public class FileManagerTab extends Tab {
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 24, Short.MAX_VALUE)
+                        .addGap(0, 2, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(187, 187, 187)
+                                .addGap(108, 108, 108)
+                                .addComponent(changeLookB)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(quitB))))
                     .addComponent(jScrollPane4))
                 .addContainerGap())
@@ -313,7 +354,8 @@ public class FileManagerTab extends Tab {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(quitB)
-                            .addComponent(deleteAttributeB))))
+                            .addComponent(deleteAttributeB)
+                            .addComponent(changeLookB))))
                 .addGap(45, 45, 45))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -446,11 +488,18 @@ public class FileManagerTab extends Tab {
             instanceInfoTA.setCaretPosition(0);
         }
     }//GEN-LAST:event_instancesCBActionPerformed
+
+    private void changeLookBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeLookBActionPerformed
+        selectedLaf = (selectedLaf + 1) % laf.length;
+        setLaF();
+    }//GEN-LAST:event_changeLookBActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane attributeInfoContainer;
     private javax.swing.JTextArea attributeInfoTA;
     private javax.swing.JList attributesList;
     private javax.swing.JButton browseB;
+    private javax.swing.JButton changeLookB;
     private javax.swing.JButton deleteAttributeB;
     private javax.swing.JButton deleteInstanceB;
     private javax.swing.JTextField filePath;

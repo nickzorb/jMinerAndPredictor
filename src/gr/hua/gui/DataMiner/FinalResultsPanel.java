@@ -43,7 +43,9 @@ public class FinalResultsPanel extends javax.swing.JPanel {
             classifiersCB.addItem(name);
         }
         ready = 1;
-        classifiersCB.setSelectedIndex(0);
+        if (classifiersCB.getItemCount() >= 1) {
+            classifiersCB.setSelectedIndex(0);
+        }
     }
 
     private void sort() {

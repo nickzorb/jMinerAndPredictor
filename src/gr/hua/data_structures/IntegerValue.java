@@ -22,7 +22,11 @@ public class IntegerValue extends ColumnValue<Integer> implements Cloneable {
         if (curValue == null) {
             ins.setMissing(attribute);
         } else {
-            ins.setValue(attribute, curValue);
+            if (ins.attribute(attribute).isNominal()) {
+                ins.setValue(attribute, curValue.toString());
+            } else {
+                ins.setValue(attribute, curValue);
+            }
         }
     }
     

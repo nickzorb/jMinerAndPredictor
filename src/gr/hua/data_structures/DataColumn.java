@@ -63,9 +63,9 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
             checkIfNumerical();
         } else {
             for (ColumnValue cv : values) {
-                if (!allowedValues.isAllowed(cv)) {
-                    //TODO SHOW ERROR MESSAGE
-                }
+//                if (!allowedValues.isAllowed(cv)) {
+//                    //TODO SHOW ERROR MESSAGE
+//                }
             }
         }
     }

@@ -26,6 +26,7 @@ public class Trainer extends Thread {
     public static final String TRAINED_CLASSIFIER_PATH = "./classifiers/";
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final String SET_TOP_RESULTS = "-top";
+    public static final String SET_LIMIT = "-limit";
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
     private int TOP_RESULTS = 3;
@@ -41,12 +42,13 @@ public class Trainer extends Thread {
     private FastVector curAttributes;
     private Instances trainingSet;
     private double max = 0;
-    private final String[] descriptions = new String[TOP_RESULTS];
-    private final String[] classifiers = new String[TOP_RESULTS];
-    private final String[] attributesFile = new String[TOP_RESULTS];
-    private final FastVector[] usedAttributes = new FastVector[TOP_RESULTS];
-    private final double[] results = new double[TOP_RESULTS];
+    private String[] descriptions;
+    private String[] classifiers;
+    private String[] attributesFile;
+    private FastVector[] usedAttributes;
+    private double[] results;
     private double min = -1;
+    private int limit;
 
     public Trainer(Classifier c, MiningResultsPanel output,
             ArrayList<CloneableAttribute> attrs,
@@ -206,12 +208,22 @@ public class Trainer extends Thread {
                     Logger.logException(e);
                 }
             }
+            descriptions = new String[TOP_RESULTS];
+            classifiers = new String[TOP_RESULTS];
+            attributesFile = new String[TOP_RESULTS];
+            usedAttributes = new FastVector[TOP_RESULTS];
+            results = new double[TOP_RESULTS];
             if (properties.getProperty(OPTIMIZE_ATTRIBUTES) != null) {
+                if (properties.getProperty(SET_LIMIT) != null) {
+                    limit = Integer.parseInt(properties.getProperty(SET_LIMIT));
+                } else {
+                    limit  = attributes.size();
+                }
                 while (run) {
                     curAttributes = new FastVector(n + 1);
                     loopAttributes(0, n);
                     //done training move on
-                    if (n < attributes.size()) {
+                    if (n < limit) {
                         n++;
                     } else {
                         run = false;

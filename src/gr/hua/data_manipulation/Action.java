@@ -7,10 +7,10 @@ import javax.swing.JFrame;
 public class Action implements Serializable, Cloneable {
 
     //action categories:
-    public static final String R = "Row";
     public static final String C = "Column";
+    public static final String R = "Row";
     public static final String G = "Global";
-    public static final String[] actionCategories = {R, C, G};
+    public static final String[] actionCategories = {C, R, G};
     //column actions:
     public static final String CR = "Remove";
     public static final String CCN = "Rename";
@@ -50,7 +50,7 @@ public class Action implements Serializable, Cloneable {
         changes = new LinkedList();
     }
 
-    private Action(Action c) {
+    protected Action(Action c) {
         mode = c.mode;
         flags = new LinkedList<>();
         for (String s : c.flags) {

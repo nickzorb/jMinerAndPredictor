@@ -76,11 +76,13 @@
               </Group>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="0" pref="24" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
+                              <Component id="changeLookB" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="quitB" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -141,6 +143,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="quitB" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deleteAttributeB" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="changeLookB" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -212,12 +215,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Instances Loaded: "/>
+        <Property name="text" type="java.lang.String" value="Instances (Rows): "/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Attributes(Columns):"/>
+        <Property name="text" type="java.lang.String" value="Attributes (Columns):"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -336,5 +339,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="changeLookB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Change Look"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeLookBActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
