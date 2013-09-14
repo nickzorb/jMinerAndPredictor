@@ -74,7 +74,11 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     public String[] toArray() {
         String[] res = new String[values.size()];
         for (ColumnValue c : values) {
-            res[values.indexOf(c)] = c.getValue().toString();
+            if (c.isNull()) {
+                res[values.indexOf(c)] = "";
+            } else {
+                res[values.indexOf(c)] = c.getValue().toString();                
+            }
         }
         return res;
     }

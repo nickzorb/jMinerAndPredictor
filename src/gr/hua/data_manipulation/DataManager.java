@@ -8,10 +8,13 @@ import gr.hua.data_structures.ColumnValue;
 import gr.hua.data_structures.DataColumn;
 import gr.hua.data_structures.DataRow;
 import gr.hua.data_structures.StringValue;
+import gr.hua.gui.MainMenu;
 import gr.hua.history.HistoryManager;
 import gr.hua.utils.Logger;
 import gr.hua.utils.PropertiesLoader;
 import gr.hua.utils.SimpleLoggable;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +26,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -286,6 +290,9 @@ public class DataManager implements ActionHandler {
         }
         rows.save();
         columns.save();
+        for (Component c : MainMenu.COMPONENTS.get(MainMenu.DATA_AREAS)) {
+            showData((JPanel) c);
+        }
     }
 
     public void revert() {
@@ -310,7 +317,11 @@ public class DataManager implements ActionHandler {
         }
     }
 
-    public void showData(JTable table) {
+    public void showData(JPanel container) {
+        JTable table=new JTable();
+        table.setEnabled(false);
+        table.setFillsViewportHeight(true);
+        table.setPreferredScrollableViewportSize(table.getPreferredSize());
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addColumn("Row id");
         int i = 0;
@@ -324,6 +335,9 @@ public class DataManager implements ActionHandler {
             curRow.addAll(Arrays.asList(r.toArray()));
             model.addRow(curRow.toArray());
         }
+        container.removeAll();
+        container.add(table.getTableHeader(), BorderLayout.PAGE_START);
+        container.add(table, BorderLayout.CENTER);
     }
 
     public String showColumnData(int i) {

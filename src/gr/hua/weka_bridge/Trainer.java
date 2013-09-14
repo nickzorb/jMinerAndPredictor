@@ -115,7 +115,6 @@ public class Trainer extends Thread {
                     outputPanel.getLock().wait();
                 } catch (InterruptedException ex) {
                     Logger.logException(ex);
-                    ex.printStackTrace();
                 }
             }
         }
@@ -188,7 +187,6 @@ public class Trainer extends Thread {
             }
         } catch (Exception e) {
             Logger.logException(e);
-            e.printStackTrace();
         }
     }
 
@@ -244,7 +242,6 @@ public class Trainer extends Thread {
             }
         } catch (Exception e) {
             Logger.logException(e);
-            e.printStackTrace();
             run = false;
         }
     }
