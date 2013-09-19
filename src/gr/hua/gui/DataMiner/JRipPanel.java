@@ -1,12 +1,12 @@
 package gr.hua.gui.DataMiner;
 
-import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.rules.JRip;
 
-public class NaiveBayesPanel extends MiningMethodPanel {
+public class JRipPanel extends MiningMethodPanel {
 
-    public NaiveBayesPanel() {
-        setName("Naive Bayes");
-        title = "Naive Bayes";
+    public JRipPanel() {
+        setName("JRip");
+        title = "JRip";
         setClassifier();
     }
 
@@ -17,6 +17,6 @@ public class NaiveBayesPanel extends MiningMethodPanel {
 
     @Override
     protected void setClassifier() {
-        classifier = new NaiveBayes();
+        classifier = new JRip();
     }
 }

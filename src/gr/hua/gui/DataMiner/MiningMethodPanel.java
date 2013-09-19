@@ -9,7 +9,7 @@ import gr.hua.weka_bridge.Trainer;
 import java.util.ArrayList;
 import java.util.Properties;
 import weka.classifiers.Classifier;
-import weka.classifiers.meta.RotationForest;
+import weka.core.Capabilities;
 
 /**
  *
@@ -21,14 +21,20 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     public static final int LOGISTIC_REGRESSION = 1;
     public static final int J48_TREE = 2;
     public static final int NEURAL_NETWORK = 3;
-    public static final int ROTATION_FOREST = 4;
-    public static final int[] methods = {NAIVE_BAYES, LOGISTIC_REGRESSION, J48_TREE, NEURAL_NETWORK, ROTATION_FOREST};
+    public static final int JRIP = 4;
+    public static final int SVM = 5;
+    public static final int ROTATION_FOREST = 6;
+    public static final int LINEAR_REGRESSION = 6;
+    public static final int[] methods = {NAIVE_BAYES, LOGISTIC_REGRESSION, J48_TREE, NEURAL_NETWORK, JRIP, SVM, ROTATION_FOREST, LINEAR_REGRESSION};
     private static final NaiveBayesPanel nbayes = new NaiveBayesPanel();
     private static final LogisticRegressionPanel lregr = new LogisticRegressionPanel();
     private static final J48Panel j48 = new J48Panel();
     private static final NeuralNetworkPanel nnet = new NeuralNetworkPanel();
+    private static final JRipPanel jrip = new JRipPanel();
+    private static final LibSVMPanel svm = new LibSVMPanel();
+    private static final LinearRegressionPanel mlregr = new LinearRegressionPanel();
     private static final RotationForestPanel rfrst = new RotationForestPanel();
-    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, rfrst};
+    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, jrip, svm, rfrst};
     protected ArrayList<CloneableAttribute> attributes;
     protected CloneableAttribute target;
     protected Properties properties;
@@ -66,7 +72,6 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
         properties = flags;
         out.add(outputPanel);
         outputPanel.setTitle(title);
-        setClassifier();
         child = new Trainer(classifier, outputPanel, attributes, target, properties);
         child.start();
         return null;
@@ -79,6 +84,13 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     protected abstract void setClassifier();
 
     public abstract String info();
+    
+    public boolean supportsNumeric() {
+        return classifier.getCapabilities().handles(
+                Capabilities.Capability.NUMERIC_CLASS) &&
+                !classifier.getCapabilities().handles(
+                Capabilities.Capability.NOMINAL_CLASS);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

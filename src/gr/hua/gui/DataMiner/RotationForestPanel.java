@@ -7,6 +7,7 @@ public class RotationForestPanel extends MiningMethodPanel {
     public RotationForestPanel() {
         setName("Rotation Forest");
         title = "Rotation Forest";
+        setClassifier();
     }
 
     @Override

@@ -114,6 +114,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
 
         descriptionTA.setColumns(20);
         descriptionTA.setRows(5);
+        descriptionTA.setEnabled(false);
         jScrollPane1.setViewportView(descriptionTA);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

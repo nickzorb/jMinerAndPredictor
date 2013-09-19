@@ -109,9 +109,12 @@ public class DataMinerTab extends Tab {
                 p.setProperty(Trainer.SET_LIMIT, limitSP.getValue().toString());
             }
         }
+        if (leaveOneOut.isSelected()) {
+            p.setProperty(Trainer.LEAVE_ONE_OUT, "ON");
+        }
     }
     
-    private CloneableAttribute targetAttribute() {
+    private CloneableAttribute getTargetAttribute() {
         JListItem item = (JListItem) targetList.getSelectedValue();
         String name = ((CloneableAttribute) item.getValue()).name();
         String[] names = MainMenu.MANAGER.getColumnNames();
@@ -150,6 +153,7 @@ public class DataMinerTab extends Tab {
         miningMethods = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
+        leaveOneOut = new javax.swing.JCheckBox();
         autoSelAttributesCB = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         resultsL = new javax.swing.JLabel();
@@ -269,6 +273,9 @@ public class DataMinerTab extends Tab {
         jScrollPane2.setMaximumSize(new java.awt.Dimension(190, 170));
         jScrollPane2.setMinimumSize(new java.awt.Dimension(190, 170));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(190, 170));
+
+        leaveOneOut.setText("Crossvalidate with leave-one-out");
+        jScrollPane2.setViewportView(leaveOneOut);
 
         autoSelAttributesCB.setText("Only those selected");
         autoSelAttributesCB.addActionListener(new java.awt.event.ActionListener() {
@@ -433,7 +440,7 @@ public class DataMinerTab extends Tab {
         ResultsArea resArea = new ResultsArea(MainMenu.main, true);
         Properties prop = new Properties();
         collectProperties(prop);
-        CloneableAttribute target = targetAttribute();
+        CloneableAttribute target = getTargetAttribute();
         if (target == null) {
             JOptionPane.showMessageDialog(this,
                     "Couldn't turn target column into a nominal attribute!");
@@ -452,7 +459,13 @@ public class DataMinerTab extends Tab {
         }
         for (MiningMethodPanel m : alMiningMethods) {
             if (m.checked()) {
-                m.mine(resArea, selColumns, target, prop);
+                if (m.supportsNumeric()) {
+                    JListItem item = (JListItem) targetList.getSelectedValue();
+                    CloneableAttribute tempTarget = (CloneableAttribute) item.getValue();
+                    m.mine(resArea, selColumns, tempTarget, prop);
+                } else {
+                    m.mine(resArea, selColumns, target, prop);
+                }
             }
         }
         resArea.open();
@@ -505,6 +518,7 @@ public class DataMinerTab extends Tab {
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JCheckBox leaveOneOut;
     private javax.swing.JCheckBox limitCB;
     private javax.swing.JLabel limitL;
     private javax.swing.JLabel limitL2;

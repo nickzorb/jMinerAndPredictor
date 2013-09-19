@@ -1,12 +1,12 @@
 package gr.hua.gui.DataMiner;
 
-import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.LibSVM;
 
-public class NaiveBayesPanel extends MiningMethodPanel {
+public class LibSVMPanel extends MiningMethodPanel {
 
-    public NaiveBayesPanel() {
-        setName("Naive Bayes");
-        title = "Naive Bayes";
+    public LibSVMPanel() {
+        setName("SVM");
+        title = "SVM";
         setClassifier();
     }
 
@@ -17,6 +17,6 @@ public class NaiveBayesPanel extends MiningMethodPanel {
 
     @Override
     protected void setClassifier() {
-        classifier = new NaiveBayes();
+        classifier = new LibSVM();
     }
 }

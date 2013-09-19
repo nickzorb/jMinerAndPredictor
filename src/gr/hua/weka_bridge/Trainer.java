@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Random;
@@ -27,6 +28,7 @@ public class Trainer extends Thread {
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final String SET_TOP_RESULTS = "-top";
     public static final String SET_LIMIT = "-limit";
+    public static final String LEAVE_ONE_OUT = "-loo";
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
     private int TOP_RESULTS = 3;
@@ -36,7 +38,7 @@ public class Trainer extends Thread {
     private ArrayList<CloneableAttribute> attributes = new ArrayList();
     private CloneableAttribute target;
     private Properties properties;
-    private static final int FOLDS = 10;
+    private static int folds = 10;
     private boolean run = true;
     private int n = 1;
     private FastVector curAttributes;
@@ -70,9 +72,7 @@ public class Trainer extends Thread {
     private void loopAttributes(int startingIndex, int attributesNumber)
             throws Exception {
         if (attributesNumber == 0) {
-            //add target attribute last
             curAttributes.addElement(target);
-            //done setting attributes, set instances
             buildInstances();
             curAttributes.removeElementAt(n);
             return;
@@ -122,15 +122,25 @@ public class Trainer extends Thread {
             outputPanel.updateAttributes(curAttributes);
             classifier.buildClassifier(trainingSet);
             Evaluation eTest = new Evaluation(trainingSet);
-            eTest.crossValidateModel(classifier, trainingSet, FOLDS,
+            eTest.crossValidateModel(classifier, trainingSet, folds,
                     new Random(1));
             double cur = eTest.correct() / (eTest.correct()
                     + eTest.incorrect());
+            if (cur == 0) {
+                cur = eTest.correlationCoefficient();
+            }
             if (cur > max) {
                 max = cur;
             }
-            outputPanel.updateText("Best so far: " + (max * 100) + "%\n"
-                    + eTest.toSummaryString() + "\n" + eTest.toMatrixString());
+            StringBuilder summary = new StringBuilder("Best so far: ");
+            summary.append(max * 100).append("%\n");
+            try {
+                summary.append(eTest.toSummaryString()).append("\n");
+                summary.append(eTest.toMatrixString());
+            } catch (Exception e) {
+                Logger.logException(e);
+            }
+            outputPanel.updateText(summary.toString());
             if (cur > min) {
                 int pos = -1;
                 if (min == -1) {
@@ -173,7 +183,7 @@ public class Trainer extends Thread {
                                 new GZIPOutputStream(os))) {
                     oos.writeObject(curAttributes);
                 }
-                descriptions[pos] = "";
+                descriptions[pos] = classifier.toString();
                 usedAttributes[pos] = new FastVector(curAttributes.size());
                 for (Object o : curAttributes.toArray()) {
                     usedAttributes[pos].addElement(o);
@@ -205,6 +215,9 @@ public class Trainer extends Thread {
                 } catch (Exception e) {
                     Logger.logException(e);
                 }
+            }
+            if (properties.getProperty(LEAVE_ONE_OUT) != null) {
+                folds = MainMenu.MANAGER.getNumberOfRows();
             }
             descriptions = new String[TOP_RESULTS];
             classifiers = new String[TOP_RESULTS];

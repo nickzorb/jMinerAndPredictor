@@ -402,6 +402,13 @@
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JCheckBox" name="leaveOneOut">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Crossvalidate with leave-one-out"/>
+          </Properties>
+        </Component>
+      </SubComponents>
     </Container>
     <Component class="javax.swing.JCheckBox" name="autoSelAttributesCB">
       <Properties>
