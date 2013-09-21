@@ -56,11 +56,17 @@ public class IntegerValue extends ColumnValue<Integer> implements Cloneable {
 
     @Override
     public String getStringValue() {
+        if (curValue == null) {
+            return null;
+        }
         return curValue.toString();
     }
 
     @Override
-    public double getDoubleValue() {
+    public Double getDoubleValue() {
+        if (curValue == null) {
+            return null;
+        }
         return (double) curValue.intValue();
     }
 }

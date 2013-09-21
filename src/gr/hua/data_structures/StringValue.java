@@ -42,7 +42,7 @@ public class StringValue extends ColumnValue<String> implements Cloneable{
     }
 
     @Override
-    public double getDoubleValue() {
+    public Double getDoubleValue() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
