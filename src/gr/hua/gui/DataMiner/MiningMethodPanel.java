@@ -24,7 +24,7 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     public static final int JRIP = 4;
     public static final int SVM = 5;
     public static final int ROTATION_FOREST = 6;
-    public static final int LINEAR_REGRESSION = 6;
+    public static final int LINEAR_REGRESSION = 7;
     public static final int[] methods = {NAIVE_BAYES, LOGISTIC_REGRESSION, J48_TREE, NEURAL_NETWORK, JRIP, SVM, ROTATION_FOREST, LINEAR_REGRESSION};
     private static final NaiveBayesPanel nbayes = new NaiveBayesPanel();
     private static final LogisticRegressionPanel lregr = new LogisticRegressionPanel();
@@ -32,9 +32,9 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     private static final NeuralNetworkPanel nnet = new NeuralNetworkPanel();
     private static final JRipPanel jrip = new JRipPanel();
     private static final LibSVMPanel svm = new LibSVMPanel();
-    private static final LinearRegressionPanel mlregr = new LinearRegressionPanel();
     private static final RotationForestPanel rfrst = new RotationForestPanel();
-    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, jrip, svm, rfrst};
+    private static final LinearRegressionPanel mlregr = new LinearRegressionPanel();
+    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, jrip, svm, rfrst, mlregr};
     protected ArrayList<CloneableAttribute> attributes;
     protected CloneableAttribute target;
     protected Properties properties;
@@ -87,7 +87,7 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     
     public boolean supportsNumeric() {
         return classifier.getCapabilities().handles(
-                Capabilities.Capability.NUMERIC_CLASS) &&
+                Capabilities.Capability.NUMERIC_CLASS) && 
                 !classifier.getCapabilities().handles(
                 Capabilities.Capability.NOMINAL_CLASS);
     }

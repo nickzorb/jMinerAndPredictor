@@ -11,12 +11,12 @@ import weka.core.FastVector;
 public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandler,
         AttributeGenerator, Cloneable {
 
-    public static final double THRESHOLD = 95.0 / 100.0;
+    public static final double THRESHOLD = 99.0 / 100.0;
     private String name;
     private ArrayList<ColumnValue> values;
     private Class type;
     private AllowedValues allowedValues;
-
+    
     public DataColumn(String name) {
         this.name = name;
         values = new ArrayList();
@@ -33,7 +33,15 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         }
         allowedValues = old.allowedValues.clone();
     }
+    
+    public Class getType() {
+        return type;
+    }
 
+    public void setType(Class c) {
+        type = c;
+    }
+    
     public void increment(int i) {
         values.get(i).alterPopulation(1);
     }
@@ -61,22 +69,24 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     public void revalidate() {
         if (type == String.class) {
             checkIfNumerical();
-        } else {
-            for (ColumnValue cv : values) {
+        } //else {
+//            for (ColumnValue cv : values) {
 //                if (!allowedValues.isAllowed(cv)) {
 //                    //TODO SHOW ERROR MESSAGE
 //                }
-            }
-        }
+//            }
+//        }
     }
 
     private void checkIfNumerical() {
-        double intCount = 0;
-        double doubleCount = 0;
+        int intCount = 0;
+        int doubleCount = 0;
+        int commaDoubleCount = 0;
         for (ColumnValue cv : values) {
             if (cv.isNull()) {
                 intCount++;
                 doubleCount++;
+                commaDoubleCount++;
                 continue;
             }
             try {
@@ -93,11 +103,26 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
                 }
             } catch (Exception e) {
             }
+            try {
+                String tmp = cv.getValue().toString().replace(',', '.');
+                Double temp = Double.parseDouble(tmp);
+                if (temp.toString().equals(tmp)) {
+                    commaDoubleCount++;
+                } else {
+                    Integer temp2 = Integer.parseInt(tmp);
+                    if (temp2.toString().equals(tmp)) {
+                        commaDoubleCount++;
+                    }
+                }
+            } catch (Exception e) {
+            }
         }
         if (intCount > values.size() * THRESHOLD) {
             toInteger();
         } else if (doubleCount > values.size() * THRESHOLD) {
             toDouble();
+        } else if (commaDoubleCount > values.size() * THRESHOLD) {
+            toCommaDouble();
         }
     }
     
@@ -168,12 +193,26 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         }
         values = newValues;
     }
+    
+    private void toCommaDouble() {
+        for (ColumnValue cv : values) {
+            if (cv.isNull()) {
+                continue;
+            }
+            cv.setValue(cv.getValue().toString().replace(',', '.'));
+        }
+        toDouble();
+    }
 
     @Override
     public String[] getValues() {
         String[] res = new String[values.size()];
         for (int i = 0; i < res.length; i++) {
-            res[i] = values.get(i).getValue().toString();
+            if (values.get(i).isNull()) {
+                res[i] = "";
+            } else {
+                res[i] = values.get(i).getValue().toString();
+            }
         }
         return res;
     }
@@ -192,6 +231,10 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     public void add(ColumnValue<T> data) {
         values.add(data);
     }
+    
+    public void remove(ColumnValue<T> data) {
+        values.remove(data);
+    }
 
     @Override
     public int find(String value) {
@@ -204,13 +247,16 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
             return -1;
         }
         for (int i = 0; i < values.size(); i++) {
-            if (value.equals(values.get(i).getValue())) {
+            if (values.get(i).isNull()) {
+                continue;
+            }
+            if (value.equals(values.get(i).getValue().toString())) {
                 return i;
             }
         }
         return -1;
     }
-
+    
     private int totalPopulation() {
         int res = 0;
         for (ColumnValue cv : values) {
@@ -239,7 +285,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         return 0;
     }
 
-    private double[] minMaxAvg() {
+    public double[] minMaxAvg() {
         double[] res = new double[3];
         double population = totalPopulationNotNull();
         res[0] = Integer.MAX_VALUE;

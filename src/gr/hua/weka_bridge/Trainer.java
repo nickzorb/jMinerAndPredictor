@@ -11,16 +11,17 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.core.Capabilities;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.Range;
 
 public class Trainer extends Thread {
 
@@ -29,6 +30,7 @@ public class Trainer extends Thread {
     public static final String SET_TOP_RESULTS = "-top";
     public static final String SET_LIMIT = "-limit";
     public static final String LEAVE_ONE_OUT = "-loo";
+    public static final String STATISTICAL = "-st";
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
     private int TOP_RESULTS = 3;
@@ -51,6 +53,7 @@ public class Trainer extends Thread {
     private double[] results;
     private double min = -1;
     private int limit;
+    private String statistic;
 
     public Trainer(Classifier c, MiningResultsPanel output,
             ArrayList<CloneableAttribute> attrs,
@@ -120,20 +123,78 @@ public class Trainer extends Thread {
         }
         try {
             outputPanel.updateAttributes(curAttributes);
-            classifier.buildClassifier(trainingSet);
             Evaluation eTest = new Evaluation(trainingSet);
-            eTest.crossValidateModel(classifier, trainingSet, folds,
-                    new Random(1));
-            double cur = eTest.correct() / (eTest.correct()
-                    + eTest.incorrect());
-            if (cur == 0) {
+            //////////////////////////////////////////////
+            ArrayList<Double> evalResults = new ArrayList();
+            Random r = new Random(1);
+//            trainingSet = new Instances(trainingSet);
+//            trainingSet.randomize(r);
+//            if (trainingSet.classAttribute().isNominal()) {
+//                trainingSet.stratify(folds);
+//            }
+//            for (int i = 0; i < folds; i++) {
+//                Instances train = trainingSet.trainCV(folds, i, r);
+//                eTest.setPriors(train);
+//                Classifier copiedClassifier = Classifier.makeCopy(classifier);
+//                copiedClassifier.buildClassifier(train);
+//                Instances test = trainingSet.testCV(folds, i);
+//                double[] res = eTest.evaluateModel(copiedClassifier, test);
+//                for (int j = 0; j < res.length; j++) {
+//                    evalResults.add(res[j]);
+//                    System.out.println(test.instance(j).classValue() + ":" + res[j]);
+//                }
+//            }
+            //////////////////////////////////////////////
+//            StringBuffer predictions = new StringBuffer("Predictions: \n");
+//            eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1), predictions, new Range("1"), false);
+            eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1));
+            ///////////////////////////////////////////// 
+//            String[] lines = predictions.toString().split("\n");
+//            double[] values = new double[lines.length - 1];
+//            double[] predics = new double[lines.length - 1];
+//            for (int i = 1; i < lines.length; i++) {
+//                String[] words = lines[i].split("[^\\d-.]+");
+//                if (words.length < 4) {
+//                    continue;
+//                }
+//                try {
+//                    values[i - 1] = Double.parseDouble(words[2]);
+//                    if (!(values[i - 1] + "").equals(words[2])) {
+//                        values[i - 1] = Integer.parseInt(words[2]);
+//                    }
+//                } catch (Exception e) {
+//                    if (!(values[i - 1] + "").equals(words[2])) {
+//                        values[i - 1] = Integer.parseInt(words[2]);
+//                    }
+//                }
+//                try {
+//                    predics[i - 1] = Double.parseDouble(words[3]);
+//                    if (!(predics[i - 1] + "").equals(words[3])) {
+//                        predics[i - 1] = Integer.parseInt(words[3]);
+//                    }
+//                } catch (Exception e) {
+//                    if (!(predics[i - 1] + "").equals(words[3])) {
+//                        predics[i - 1] = Integer.parseInt(words[3]);
+//                    }
+//                }
+//            }
+            /////////////////////////////////////////////////////
+            double cur;
+            StringBuilder summary = new StringBuilder("Best ");
+            summary.append(statistic);
+            if (target.isNumeric()) {
                 cur = eTest.correlationCoefficient();
+            } else {
+                if (properties.getProperty(STATISTICAL) != null) {
+                    cur = eTest.areaUnderROC(0);
+                } else {
+                    cur = eTest.pctCorrect();
+                }
             }
             if (cur > max) {
                 max = cur;
             }
-            StringBuilder summary = new StringBuilder("Best so far: ");
-            summary.append(max * 100).append("%\n");
+            summary.append(max).append("\n");
             try {
                 summary.append(eTest.toSummaryString()).append("\n");
                 summary.append(eTest.toMatrixString());
@@ -170,6 +231,7 @@ public class Trainer extends Thread {
                 curName.append(MainMenu.CURRENT_FILE.substring(0, MainMenu.CURRENT_FILE.indexOf("."))).append("_");
                 curName.append(className).append(curDate).append(".model");
                 classifiers[pos] = curName.toString();
+                classifier.buildClassifier(trainingSet);
                 OutputStream os = new FileOutputStream(curName.toString());
                 try (ObjectOutputStream oos = new ObjectOutputStream(
                                 new GZIPOutputStream(os))) {
@@ -199,6 +261,10 @@ public class Trainer extends Thread {
             Logger.logException(e);
         }
     }
+    
+    private double calculateStatistic(double[] values, double[] predics) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void run() {
@@ -218,6 +284,19 @@ public class Trainer extends Thread {
             }
             if (properties.getProperty(LEAVE_ONE_OUT) != null) {
                 folds = MainMenu.MANAGER.getNumberOfRows();
+            }
+            if (properties.getProperty(STATISTICAL) != null) {
+                if (target.isNominal()) {
+                    statistic = "ROC area under curve: ";
+                } else {
+                    statistic = "Correlation Coefficient: ";
+                }
+            } else {
+                if (target.isNominal()) {
+                    statistic = "Success rate: ";
+                } else {
+                    statistic = "Correlation Coefficient: ";
+                }
             }
             descriptions = new String[TOP_RESULTS];
             classifiers = new String[TOP_RESULTS];
@@ -239,7 +318,7 @@ public class Trainer extends Thread {
                     } else {
                         run = false;
                         outputPanel.showFinishedScreen(usedAttributes, results,
-                                descriptions, classifiers);
+                                descriptions, classifiers, statistic);
                     }
                 }
             } else {
@@ -251,7 +330,7 @@ public class Trainer extends Thread {
                 curAttributes.addElement(target);
                 buildInstances();
                 outputPanel.showFinishedScreen(usedAttributes, results,
-                        descriptions, classifiers);
+                        descriptions, classifiers, statistic);
             }
         } catch (Exception e) {
             Logger.logException(e);

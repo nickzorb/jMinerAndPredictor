@@ -45,9 +45,9 @@ public class MiningResultsPanel extends javax.swing.JPanel {
     }
 
     public void showFinishedScreen(FastVector[] attributes, double[] results,
-            String[] descriptions, String[] classifiers) {
+            String[] descriptions, String[] classifiers, String statistic) {
         FinalResultsPanel rp = new FinalResultsPanel(classifiers, results,
-                attributes, descriptions);
+                attributes, descriptions, statistic);
         removeAll();
         setLayout(new BorderLayout());
         add(rp);

@@ -42,11 +42,6 @@ public abstract class ColumnValue<T> implements Value<T>, Cloneable {
         return curValue;
     }
 
-    @Override
-    public void setValue(T value) {
-        curValue = value;
-    }
-
     public boolean isNull() {
         return curValue == null;
     }

@@ -9,14 +9,14 @@ public class Reaction extends Action implements Cloneable, Serializable {
     public static final String CDV = "Decrease value";
     public static final String CIV = "Increase value";
     public static final String CUV = "Update value";
-    public static final String[] column_reactions = {CR, CCN, CD, CCT, CFNRV, CCAV, CTR, CARX, CDV, CIV, CUV};
+    public static final String[] column_reactions = {CR, CCN, CD, CFNRV, CTR, CDV, CIV, CUV};
     //row reactions (superset of row actions):
     public static final String RRC = "Remove column";
     public static final String RDC = "Duplicate column";
     public static final String RRV = "Replace values";
-    public static final String[] row_reactions = {RR, RD, RFNRV, RARX, RRC, RDC, RRV};
+    public static final String[] row_reactions = {RR, RD, RFNRV, RRC, RDC, RRV};
     //global reactions (superset of global actions):
-    public static final String[] global_reactions = {GREC, GRER, GFNRV, GARX};
+    public static final String[] global_reactions = {GREC, GRER, GFNRV};
 
     public Reaction(String mode, LinkedList<String> flags, Object target) {
         super(mode, flags, target);

@@ -30,4 +30,19 @@ public class StringValue extends ColumnValue<String> implements Cloneable{
     public ColumnValue<String> clone() {
         return new StringValue(this);
     }
+
+    @Override
+    public void setValue(String value) {
+        curValue = value;
+    }
+
+    @Override
+    public String getStringValue() {
+        return curValue;
+    }
+
+    @Override
+    public double getDoubleValue() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

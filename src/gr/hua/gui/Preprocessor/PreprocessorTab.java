@@ -8,6 +8,8 @@ import gr.hua.data_manipulation.Action;
 import gr.hua.gui.MainMenu;
 import gr.hua.gui.Tab;
 import java.awt.BorderLayout;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +27,9 @@ public class PreprocessorTab extends Tab {
         parent.registerComponent(MainMenu.DATA_AREAS, container);
         loadOptions();
         ready = true;
+        actionContainer.setLayout(new BoxLayout(actionContainer, BoxLayout.Y_AXIS));
+        undoB1.setVisible(false);
+        jButton1.setVisible(false);
     }
 
     private void loadOptions() {
@@ -39,6 +44,16 @@ public class PreprocessorTab extends Tab {
         action.setEnabled(false);
     }
 
+    private void updateHistory() {
+        actionContainer.removeAll();
+        if (MainMenu.MANAGER.getChanges() != null) {
+            for (Action a : MainMenu.MANAGER.getChanges()) {
+                actionContainer.add(new JLabel(a.getMode() + " : " + a.getTarget()));
+            }
+        }
+        actionContainer.revalidate();
+        actionContainer.repaint();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,11 +78,18 @@ public class PreprocessorTab extends Tab {
         jLabel41 = new javax.swing.JLabel();
         undoB = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        actionContainer = new javax.swing.JPanel();
         undoB1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(800, 640));
         setPreferredSize(new java.awt.Dimension(800, 640));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                onShown(evt);
+            }
+        });
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -123,21 +145,21 @@ public class PreprocessorTab extends Tab {
                 .addGap(515, 515, 515))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel34)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(action, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(performB))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel42)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(target, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel39)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(target, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(action, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(performB)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -149,7 +171,7 @@ public class PreprocessorTab extends Tab {
                     .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel39)
                     .addComponent(target, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel34)
                     .addComponent(action, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,20 +196,41 @@ public class PreprocessorTab extends Tab {
         });
 
         jButton2.setText("Redo");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout actionContainerLayout = new javax.swing.GroupLayout(actionContainer);
+        actionContainer.setLayout(actionContainerLayout);
+        actionContainerLayout.setHorizontalGroup(
+            actionContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 163, Short.MAX_VALUE)
+        );
+        actionContainerLayout.setVerticalGroup(
+            actionContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 517, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(actionContainer);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel41, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(undoB, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+            .addComponent(undoB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel41)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(undoB)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2))
@@ -201,6 +244,11 @@ public class PreprocessorTab extends Tab {
         });
 
         jButton1.setText("Load Changes");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -209,19 +257,15 @@ public class PreprocessorTab extends Tab {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGap(18, 18, 18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(undoB1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(jButton1))
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,15 +286,48 @@ public class PreprocessorTab extends Tab {
     }// </editor-fold>//GEN-END:initComponents
 
     private void undoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoBActionPerformed
-        // TODO code
+        MainMenu.MANAGER.revert();
+        updateHistory();
     }//GEN-LAST:event_undoBActionPerformed
 
     private void undoB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoB1ActionPerformed
-        // TODO add your handling code here:
+        MainMenu.MANAGER.saveChanges();
     }//GEN-LAST:event_undoB1ActionPerformed
 
     private void performBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performBActionPerformed
-        // TODO add your handling code here:
+        Action act = new Action(action.getModel().getElementAt(
+                action.getSelectedIndex()).toString(), null,
+                target.getSelectedIndex());
+        MainMenu.MANAGER.applyAction(act);
+        updateHistory();
+        action.removeAllItems();
+        int index = category.getSelectedIndex();
+        int index2 = target.getSelectedIndex();
+        int index3 = action.getSelectedIndex();
+        for (String s : Action.actions[index]) {
+            action.addItem(s);
+        }
+        target.setEnabled(true);
+        target.removeAllItems();
+        switch (index) {
+            case 0:
+                for (String s : MainMenu.MANAGER.getColumnNames()) {
+                    target.addItem(s);
+                }
+                break;
+            case 1:
+                for (int i = 0; i < MainMenu.MANAGER.getNumberOfRows(); i++) {
+                    target.addItem(i);
+                }
+                break;
+            case 2:
+                target.setEnabled(false);
+                break;
+            default:
+                break;
+        }
+        target.setSelectedIndex(index2);
+        action.setSelectedIndex(index3);
     }//GEN-LAST:event_performBActionPerformed
 
     private void categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryActionPerformed
@@ -290,11 +367,31 @@ public class PreprocessorTab extends Tab {
     }//GEN-LAST:event_categoryActionPerformed
 
     private void targetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetActionPerformed
-        //TODO handle selections if necessary
     }//GEN-LAST:event_targetActionPerformed
+
+    private void onShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_onShown
+        if (!MainMenu.MANAGER.ready()) {
+            JOptionPane.showMessageDialog(MainMenu.main, "No file currently "
+                    + "open", "Preprocessing not"
+                    + "available",
+                    JOptionPane.ERROR_MESSAGE);
+            MainMenu.tabbedPane.setSelectedIndex(0);
+        }
+        updateHistory();
+    }//GEN-LAST:event_onShown
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        MainMenu.MANAGER.redo();
+        updateHistory();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        MainMenu.MANAGER.loadChanges();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox action;
+    private javax.swing.JPanel actionContainer;
     private javax.swing.JComboBox category;
     private javax.swing.JPanel container;
     private javax.swing.JButton jButton1;
@@ -306,6 +403,7 @@ public class PreprocessorTab extends Tab {
     private javax.swing.JLabel jLabel42;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton performB;
     private javax.swing.JComboBox target;

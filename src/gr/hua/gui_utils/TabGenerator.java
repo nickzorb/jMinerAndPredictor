@@ -14,7 +14,7 @@ public class TabGenerator {
     public static final int PreprocessingTab = 1;
     public static final int DataMiningTab = 2;
     public static final int PrognosisTab = 3;
-    private static String[] tabTitles = {"File manager", "Preprocessor", "Data Miner", "Prediction"};
+    private static String[] tabTitles = {"File manager", "Preprocessor", "Data Miner", "Predictor"};
 
     public static Tab generateTab(MainMenu parent, int tabId) {
         switch (tabId) {

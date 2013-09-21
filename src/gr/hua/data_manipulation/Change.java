@@ -4,33 +4,33 @@ import java.io.Serializable;
 
 public class Change implements Serializable, Cloneable {
 
-    private String value_affected;
-    private String new_value;
+    private String valueAffected;
+    private String newValue;
 
-    public Change(String value_affected, String new_value) {
-        this.value_affected = value_affected;
-        this.new_value = new_value;
+    public Change(String valueAffected, String newValue) {
+        this.valueAffected = valueAffected;
+        this.newValue = newValue;
     }
 
     private Change(Change c) {
-        value_affected = c.value_affected;
-        new_value = c.new_value;
+        valueAffected = c.valueAffected;
+        newValue = c.newValue;
     }
 
-    public String getValue_affected() {
-        return value_affected;
+    public String getValueAffected() {
+        return valueAffected;
     }
 
-    public void setValue_affected(String value_affected) {
-        this.value_affected = value_affected;
+    public void setValueAffected(String value_affected) {
+        this.valueAffected = value_affected;
     }
 
-    public String getNew_value() {
-        return new_value;
+    public String getNewValue() {
+        return newValue;
     }
 
-    public void setNew_value(String new_value) {
-        this.new_value = new_value;
+    public void setNewValue(String new_value) {
+        this.newValue = new_value;
     }
 
     @Override

@@ -25,6 +25,7 @@ public class DataMinerTab extends Tab {
     private int id1 = 0, id2 = 0, id3 = 0;
     private ArrayList<JListItem> columns;
     private ArrayList<MiningMethodPanel> alMiningMethods = new ArrayList();
+    private boolean ready = false;
 
     public DataMinerTab(MainMenu parent, String title) {
         super(parent, title);
@@ -48,6 +49,7 @@ public class DataMinerTab extends Tab {
         limitL.setEnabled(false);
         limitL2.setEnabled(false);
         limitCB.setEnabled(false);
+        ready = true;
     }
 
     private boolean checkForDuplicates() {
@@ -75,7 +77,15 @@ public class DataMinerTab extends Tab {
     }
 
     private void loadMiner() {
-        if (!MainMenu.MANAGER.ready()) {
+        if (!ready) {
+            return;
+        }
+        if (!MainMenu.MANAGER.readyForMining()) {
+            JOptionPane.showMessageDialog(MainMenu.main, "No file currently "
+                    + "open, or there are errors within the file", "Mining not"
+                    + "available",
+                    JOptionPane.ERROR_MESSAGE);
+            MainMenu.tabbedPane.setSelectedIndex(0);
             return;
         }
         ((MyDefaultListModel) columnsList.getModel()).removeAllElements();
@@ -111,6 +121,9 @@ public class DataMinerTab extends Tab {
         }
         if (leaveOneOut.isSelected()) {
             p.setProperty(Trainer.LEAVE_ONE_OUT, "ON");
+        }
+        if (cstat.isSelected()) {
+            p.setProperty(Trainer.STATISTICAL, "ONO");
         }
     }
     
@@ -153,7 +166,9 @@ public class DataMinerTab extends Tab {
         miningMethods = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
         leaveOneOut = new javax.swing.JCheckBox();
+        cstat = new javax.swing.JCheckBox();
         autoSelAttributesCB = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         resultsL = new javax.swing.JLabel();
@@ -274,8 +289,32 @@ public class DataMinerTab extends Tab {
         jScrollPane2.setMinimumSize(new java.awt.Dimension(190, 170));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(190, 170));
 
-        leaveOneOut.setText("Crossvalidate with leave-one-out");
-        jScrollPane2.setViewportView(leaveOneOut);
+        leaveOneOut.setText("Leave-one-out");
+
+        cstat.setText("Use C-statistic");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cstat)
+                    .addComponent(leaveOneOut, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(leaveOneOut)
+                .addGap(3, 3, 3)
+                .addComponent(cstat)
+                .addContainerGap(119, Short.MAX_VALUE))
+        );
+
+        jScrollPane2.setViewportView(jPanel1);
 
         autoSelAttributesCB.setText("Only those selected");
         autoSelAttributesCB.addActionListener(new java.awt.event.ActionListener() {
@@ -299,13 +338,14 @@ public class DataMinerTab extends Tab {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel3)
+                                        .addGap(11, 11, 11)
                                         .addComponent(autoAttributesCB))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,11 +386,8 @@ public class DataMinerTab extends Tab {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(valuesScr2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                                .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,13 +467,6 @@ public class DataMinerTab extends Tab {
     }//GEN-LAST:event_removeBActionPerformed
 
     private void mineBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mineBActionPerformed
-        if (!MainMenu.MANAGER.ready()) {
-            JOptionPane.showMessageDialog(this, "There are errors in the currently open file! Please fix them before mining.");
-            return;
-        } else if (!checkForDuplicates()) {
-            JOptionPane.showMessageDialog(this, "Duplicate column names are not allowed!");
-            return;
-        }
         ResultsArea resArea = new ResultsArea(MainMenu.main, true);
         Properties prop = new Properties();
         collectProperties(prop);
@@ -511,12 +541,14 @@ public class DataMinerTab extends Tab {
     private javax.swing.JCheckBox autoSelAttributesCB;
     private javax.swing.JList columnsList;
     private javax.swing.JScrollPane container;
+    private javax.swing.JCheckBox cstat;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JCheckBox leaveOneOut;
     private javax.swing.JCheckBox limitCB;

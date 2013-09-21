@@ -4,6 +4,7 @@
  */
 package gr.hua.gui.FileManager;
 
+import gr.hua.data_manipulation.Action;
 import gr.hua.data_structures.DataColumn;
 import gr.hua.data_structures.DataRow;
 import gr.hua.gui.MainMenu;
@@ -28,10 +29,10 @@ public class FileManagerTab extends Tab {
 
     //Looks and feels
     private String[] laf = {
-         "com.jtattoo.plaf.texture.TextureLookAndFeel",
-         "com.jtattoo.plaf.aluminium.AluminiumLookAndFeel",
          "com.jtattoo.plaf.mint.MintLookAndFeel",
          "javax.swing.plaf.nimbus.NimbusLookAndFeel",
+         "com.jtattoo.plaf.aluminium.AluminiumLookAndFeel",
+         "com.jtattoo.plaf.texture.TextureLookAndFeel",
          UIManager.getSystemLookAndFeelClassName()
          
     };
@@ -155,6 +156,7 @@ public class FileManagerTab extends Tab {
         jScrollPane4 = new javax.swing.JScrollPane();
         logArea = new javax.swing.JTextArea();
         changeLookB = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(800, 640));
         setMinimumSize(new java.awt.Dimension(800, 640));
@@ -165,14 +167,14 @@ public class FileManagerTab extends Tab {
             }
         });
 
-        browseB.setText("Browse");
+        browseB.setText("Open");
         browseB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 browseBActionPerformed(evt);
             }
         });
 
-        openFileB.setText("Open File");
+        openFileB.setText("Reload File");
         openFileB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openFileBActionPerformed(evt);
@@ -186,7 +188,7 @@ public class FileManagerTab extends Tab {
             }
         });
 
-        saveFileB.setText("Save File");
+        saveFileB.setText("Save As");
         saveFileB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveFileBActionPerformed(evt);
@@ -263,6 +265,13 @@ public class FileManagerTab extends Tab {
             }
         });
 
+        jButton1.setText("Save");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -282,52 +291,66 @@ public class FileManagerTab extends Tab {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(instancesCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteInstanceB)
-                        .addGap(92, 92, 92))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                                    .addComponent(attributeInfoContainer)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(107, 107, 107)
-                                .addComponent(deleteAttributeB)))
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 2, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(108, 108, 108)
-                                .addComponent(changeLookB)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(quitB))))
-                    .addComponent(jScrollPane4))
+                                .addComponent(deleteInstanceB)
+                                .addGap(92, 92, 92))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(33, 33, 33)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                                            .addComponent(attributeInfoContainer)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(107, 107, 107)
+                                        .addComponent(deleteAttributeB)))
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 2, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(108, 108, 108)
+                                        .addComponent(changeLookB)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(quitB))))
+                            .addComponent(jScrollPane4)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(saveFileB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(browseB)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(openFileB)))))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(15, 15, 15)
-                    .addComponent(filePath, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(browseB)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(openFileB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(saveFileB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addContainerGap(21, Short.MAX_VALUE)))
+                    .addComponent(filePath, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(170, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(optionsB)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(openFileB)
+                    .addComponent(browseB))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(optionsB)
+                    .addComponent(saveFileB)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -359,17 +382,9 @@ public class FileManagerTab extends Tab {
                 .addGap(45, 45, 45))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(13, 13, 13)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(3, 3, 3)
-                            .addComponent(filePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(openFileB)
-                            .addComponent(browseB)))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(saveFileB)
-                    .addContainerGap(575, Short.MAX_VALUE)))
+                    .addGap(16, 16, 16)
+                    .addComponent(filePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(604, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -451,9 +466,8 @@ public class FileManagerTab extends Tab {
         }
         index1 = attributesList.getSelectedIndex();
         index2 = instancesCB.getSelectedIndex();
-//        Action action = new Action(Action.RR, null, index2);
-//        MainMenu.MANAGER.applyAction(action);
-        MainMenu.MANAGER.deleteRow(index2);
+        Action action = new Action(Action.RR, null, index2);
+        MainMenu.MANAGER.applyAction(action);
         refress();
     }//GEN-LAST:event_deleteInstanceBActionPerformed
 
@@ -464,9 +478,8 @@ public class FileManagerTab extends Tab {
         }
         index1 = attributesList.getSelectedIndex();
         index2 = instancesCB.getSelectedIndex();
-//        Action action = new Action(Action.CR, null, index1);
-//        MainMenu.MANAGER.applyAction(action);
-        MainMenu.MANAGER.deleteColumn(index1);
+        Action action = new Action(Action.CR, null, index1);
+        MainMenu.MANAGER.applyAction(action);
         refress();
     }//GEN-LAST:event_deleteAttributeBActionPerformed
 
@@ -494,6 +507,30 @@ public class FileManagerTab extends Tab {
         setLaF();
     }//GEN-LAST:event_changeLookBActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (file == null && filePath.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please choose a file first!");
+            return;
+        } else if (file == null) {
+            try {
+                file = new File(filePath.getText());
+                if (!file.exists()) {
+                    throw new Exception("Non existing file");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error finding file!");
+                return;
+            }
+        }
+        if (JOptionPane.showConfirmDialog(this, "Are you sure you want to overwrite this file?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            try {
+                MainMenu.MANAGER.saveFile(file);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed to write to file!");
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane attributeInfoContainer;
     private javax.swing.JTextArea attributeInfoTA;
@@ -505,6 +542,7 @@ public class FileManagerTab extends Tab {
     private javax.swing.JTextField filePath;
     private javax.swing.JTextArea instanceInfoTA;
     private javax.swing.JComboBox instancesCB;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -12,27 +12,27 @@ public class Action implements Serializable, Cloneable {
     public static final String G = "Global";
     public static final String[] actionCategories = {C, R, G};
     //column actions:
-    public static final String CR = "Remove";
-    public static final String CCN = "Rename";
-    public static final String CD = "Duplicate";
-    public static final String CCT = "Change type";
-    public static final String CFNRV = "Find and replace certain values";
-    public static final String CCAV = "Choose allowed values";
+    public static final String CR = "Remove Column";
+    public static final String CCN = "Rename Column";
+    public static final String CD = "Duplicate Column";
+    public static final String CFNRV = "Find and replace column values";
     public static final String CTR = "Split to ranges";
-    public static final String CARX = "Apply regural expression";
-    public static final String[] column_actions = {CR, CCN, CD, CCT, CFNRV, CCAV, CTR, CARX};
+//    public static final String CCAV = "Choose allowed values";
+//    public static final String CCT = "Change type";
+//    public static final String CARX = "Apply regural expression";
+    public static final String[] column_actions = {CR, CCN, CD, CFNRV, CTR};
     //row actions:
-    public static final String RR = "Remove";
-    public static final String RD = "Duplicate";
-    public static final String RFNRV = "Find and replace certain values";
-    public static final String RARX = "Apply regural expression";
-    public static final String[] row_actions = {RR, RD, RFNRV, RARX};
+    public static final String RR = "Remove Row";
+    public static final String RD = "Duplicate Row";
+    public static final String RFNRV = "Find and replace row values";
+//    public static final String RARX = "Apply regural expression";
+    public static final String[] row_actions = {RR, RD, RFNRV};
     //global actions:
     public static final String GREC = "Remove empty columns";
     public static final String GRER = "Remove empty rows";
-    public static final String GFNRV = "Find and replace certain values";
-    public static final String GARX = "Apply regural expression";
-    public static final String[] global_actions = {GREC, GRER, GFNRV, GARX};
+    public static final String GFNRV = "Find and replace global values";
+//    public static final String GARX = "Apply regural expression";
+    public static final String[] global_actions = {GREC, GRER, GFNRV};
     //all actions by category
     public static final String[][] actions = {column_actions, row_actions, global_actions};
     //the parent is the main window and should be set every time the program runs
@@ -53,8 +53,10 @@ public class Action implements Serializable, Cloneable {
     protected Action(Action c) {
         mode = c.mode;
         flags = new LinkedList<>();
-        for (String s : c.flags) {
-            flags.add(s);
+        if (c.flags != null) {
+            for (String s : c.flags) {
+                flags.add(s);
+            }
         }
         target = c.target;
         changes = new LinkedList();

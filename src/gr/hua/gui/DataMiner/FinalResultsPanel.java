@@ -6,6 +6,7 @@ package gr.hua.gui.DataMiner;
 
 import gr.hua.weka_bridge.CloneableAttribute;
 import java.io.File;
+import weka.core.Attribute;
 import weka.core.FastVector;
 
 /**
@@ -24,8 +25,12 @@ public class FinalResultsPanel extends javax.swing.JPanel {
      * Creates new form FinalResultsPanel
      */
     public FinalResultsPanel(String[] classifiers, double[] dResults,
-            FastVector[] fvAttributes, String[] sDescriptions) {
+            FastVector[] fvAttributes, String[] sDescriptions, String stat) {
         initComponents();
+        if (classifiers.length == 0) {
+            return;
+        }
+        score.setText(stat);
         classifierNames = classifiers;
         attributes = fvAttributes;
         results = dResults;
@@ -81,7 +86,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         classifiersCB = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
+        score = new javax.swing.JLabel();
         resultL = new javax.swing.JLabel();
         deleteB = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -101,7 +106,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Success rate:");
+        score.setText(" ");
 
         deleteB.setText("Delete");
         deleteB.addActionListener(new java.awt.event.ActionListener() {
@@ -124,7 +129,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
             .addComponent(classifiersCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(jLabel2)
+                .addComponent(score)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(deleteB, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -145,7 +150,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
                 .addComponent(classifiersCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(score, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(resultL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -173,6 +178,7 @@ public class FinalResultsPanel extends javax.swing.JPanel {
         }
         description.append("\n").append(descriptions[idx]);
         descriptionTA.setText(description.toString());
+        descriptionTA.setCaretPosition(0);
     }//GEN-LAST:event_classifiersCBActionPerformed
 
     private void deleteBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBActionPerformed
@@ -215,9 +221,9 @@ public class FinalResultsPanel extends javax.swing.JPanel {
     private javax.swing.JButton deleteB;
     private javax.swing.JTextArea descriptionTA;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel resultL;
+    private javax.swing.JLabel score;
     // End of variables declaration//GEN-END:variables
 }

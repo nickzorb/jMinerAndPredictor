@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 /**
@@ -26,6 +27,7 @@ public final class MainMenu extends JFrame implements JContainer {
             new HashMap();
     public static final DataManager MANAGER = new DataManager();
     public static MainMenu main;
+    public static JTabbedPane tabbedPane;
     private ArrayList<Tab> tabs;
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -33,6 +35,7 @@ public final class MainMenu extends JFrame implements JContainer {
         initComponents();
         setTitle("Data Miner");
         main = this;
+        tabbedPane = jTabbedPane;
         registerComponent(MAIN_WINDOW, this);
         tabs = new ArrayList();
         for (int i = 0; i < TabGenerator.numberOfTabs; i++) {

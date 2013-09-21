@@ -90,15 +90,15 @@ public final class FileOptionsDialog extends MyDialog {
         PropertiesLoader.addProperty(DataManager.R_LITERAL_START,
                 literalStart.getText());
         PropertiesLoader.addProperty(DataManager.W_COLUMN_BREAK,
-                wColumnSeparators.getText());
+                wColumnSeparators.getText().replace("\\n", "\n"));
         PropertiesLoader.addProperty(DataManager.W_LINE_BREAK,
-                wRowSeparators.getText());
+                wRowSeparators.getText().replace("\\n", "\n"));
         PropertiesLoader.addProperty(DataManager.W_NULL,
-                wNullPlaceholder.getText());
+                wNullPlaceholder.getText().replace("\\n", "\n"));
         PropertiesLoader.addProperty(DataManager.W_LITERAL_START,
-                wLiteralStart.getText());
+                wLiteralStart.getText().replace("\\n", "\n"));
         PropertiesLoader.addProperty(DataManager.W_LITERAL_END,
-                wLiteralEnd.getText());
+                wLiteralEnd.getText().replace("\\n", "\n"));
         PropertiesLoader.saveProperties();
     }
 
