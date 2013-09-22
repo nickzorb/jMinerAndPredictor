@@ -3,6 +3,7 @@ package gr.hua.data_structures;
 import gr.hua.data_manipulation.Action;
 import gr.hua.data_manipulation.ActionHandler;
 import gr.hua.gui.MainMenu;
+import gr.hua.utils.NumParser;
 import gr.hua.weka_bridge.AttributeGenerator;
 import gr.hua.weka_bridge.CloneableAttribute;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import weka.core.FastVector;
 public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandler,
         AttributeGenerator, Cloneable {
 
-    public static final double THRESHOLD = 99.0 / 100.0;
+    public static final double THRESHOLD = 98.0 / 100.0;
     private String name;
     private ArrayList<ColumnValue> values;
     private Class type;
@@ -81,80 +82,69 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     private void checkIfNumerical() {
         int intCount = 0;
         int doubleCount = 0;
-        int commaDoubleCount = 0;
         for (ColumnValue cv : values) {
             if (cv.isNull()) {
                 intCount++;
                 doubleCount++;
-                commaDoubleCount++;
                 continue;
             }
-            try {
-                Integer temp = Integer.parseInt(cv.getValue().toString());
-                if (temp.toString().equals(cv.getValue().toString())) {
-                    intCount++;
-                }
-            } catch (Exception e) {
+            Integer tempInt = NumParser.parseInt(cv.getValue().toString());
+            Double tempDouble = NumParser.parseDouble(cv.getValue().toString());
+            if (tempInt != null) {
+                intCount++;
             }
-            try {
-                Double temp = Double.parseDouble(cv.getValue().toString());
-                if (temp.toString().equals(cv.getValue().toString())) {
-                    doubleCount++;
-                }
-            } catch (Exception e) {
-            }
-            try {
-                String tmp = cv.getValue().toString().replace(',', '.');
-                Double temp = Double.parseDouble(tmp);
-                if (temp.toString().equals(tmp)) {
-                    commaDoubleCount++;
-                } else {
-                    Integer temp2 = Integer.parseInt(tmp);
-                    if (temp2.toString().equals(tmp)) {
-                        commaDoubleCount++;
-                    }
-                }
-            } catch (Exception e) {
+            if (tempDouble != null) {
+                doubleCount++;
             }
         }
-        if (intCount > values.size() * THRESHOLD) {
+        if (intCount > values.size() * THRESHOLD && intCount > doubleCount) {
             toInteger();
         } else if (doubleCount > values.size() * THRESHOLD) {
             toDouble();
-        } else if (commaDoubleCount > values.size() * THRESHOLD) {
-            toCommaDouble();
         }
     }
     
     private void toInteger() {
         type = Integer.class;
-        boolean firstNull = true;
         ArrayList<ColumnValue> newValues = new ArrayList();
         for (ColumnValue cv : values) {
             ColumnValue newValue = null;
-            try {
-                Integer temp = Integer.parseInt(cv.getValue().toString());
-                newValue = new IntegerValue(temp);
-                newValue.setPopulation(cv.getPopulation());
-                newValues.add(newValue);
-            } catch (Exception e) {
-                if (firstNull) {
+            Integer temp = null;
+            if (!cv.isNull()) {
+                temp = NumParser.parseInt(cv.getValue().toString());
+            }
+            if (temp == null) {
+                for (ColumnValue ncv : newValues) {
+                    if (ncv.isNull()) {
+                        newValue = ncv;
+                        ncv.alterPopulation(cv.getPopulation());
+                        break;
+                    }
+                }
+                if (newValue == null) {
                     newValue = new IntegerValue(null);
                     newValue.setPopulation(cv.getPopulation());
                     newValues.add(newValue);
-                } else {
-                    for (ColumnValue ncv : newValues) {
-                        if (ncv.isNull()) {
-                            newValue = ncv;
-                            ncv.alterPopulation(cv.getPopulation());
-                            break;
-                        }
+                }
+            } else {
+                for (ColumnValue ncv : newValues) {
+                    if (ncv.isNull()) {
+                        continue;
+                    }
+                    if (ncv.getValue().toString().equals(temp.toString())) {
+                        ncv.alterPopulation(cv.getPopulation());
+                        newValue = ncv;
+                        break;
                     }
                 }
-            } finally {
-                for (int i = 0; i < MainMenu.MANAGER.getNumberOfRows(); i++) {
-                    MainMenu.MANAGER.get(i).replace(cv, newValue);
+                if (newValue == null) {
+                    newValue = new IntegerValue(temp);
+                    newValue.setPopulation(cv.getPopulation());
+                    newValues.add(newValue);
                 }
+            }
+            for (int i = 0; i < MainMenu.MANAGER.getNumberOfRows(); i++) {
+                MainMenu.MANAGER.get(i).replace(cv, newValue);
             }
         }
         values = newValues;
@@ -162,46 +152,36 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
 
     private void toDouble() {
         type = Double.class;
-        boolean firstNull = true;
         ArrayList<ColumnValue> newValues = new ArrayList();
         for (ColumnValue cv : values) {
             ColumnValue newValue = null;
-            try {
-                double temp = Double.parseDouble(cv.getValue().toString());
-                newValue = new DoubleValue(temp);
-                newValue.setPopulation(cv.getPopulation());
-                newValues.add(newValue);
-            } catch (Exception e) {
-                if (firstNull) {
+            Double temp = null;
+            if (!cv.isNull()) {
+                temp = NumParser.parseDouble(cv.getValue().toString());
+            }
+            if (temp == null) {
+                for (ColumnValue ncv : newValues) {
+                    if (ncv.isNull()) {
+                        newValue = ncv;
+                        ncv.alterPopulation(cv.getPopulation());
+                        break;
+                    }
+                }
+                if (newValue == null) {
                     newValue = new DoubleValue(null);
                     newValue.setPopulation(cv.getPopulation());
                     newValues.add(newValue);
-                } else {
-                    for (ColumnValue ncv : newValues) {
-                        if (ncv.isNull()) {
-                            newValue = ncv;
-                            ncv.alterPopulation(cv.getPopulation());
-                            break;
-                        }
-                    }
                 }
-            } finally {
-                for (int i = 0; i < MainMenu.MANAGER.getNumberOfRows(); i++) {
-                    MainMenu.MANAGER.get(i).replace(cv, newValue);
-                }
+            } else {
+                newValue = new DoubleValue(temp);
+                newValue.setPopulation(cv.getPopulation());
+                newValues.add(newValue);
+            }
+            for (int i = 0; i < MainMenu.MANAGER.getNumberOfRows(); i++) {
+                MainMenu.MANAGER.get(i).replace(cv, newValue);
             }
         }
         values = newValues;
-    }
-    
-    private void toCommaDouble() {
-        for (ColumnValue cv : values) {
-            if (cv.isNull()) {
-                continue;
-            }
-            cv.setValue(cv.getValue().toString().replace(',', '.'));
-        }
-        toDouble();
     }
 
     @Override

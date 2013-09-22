@@ -283,7 +283,7 @@ public class DataMinerTab extends Tab {
 
         container.setViewportView(miningMethods);
 
-        jLabel2.setText("Select optimizations:");
+        jLabel2.setText("Extra Options:");
 
         jScrollPane2.setMaximumSize(new java.awt.Dimension(190, 170));
         jScrollPane2.setMinimumSize(new java.awt.Dimension(190, 170));

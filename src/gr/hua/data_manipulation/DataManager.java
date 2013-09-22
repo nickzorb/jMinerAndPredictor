@@ -492,7 +492,7 @@ public class DataManager implements ActionHandler {
                 String[] values = lines[i].split(columnSeparators);
                 DataRow tmpRow = new DataRow();
                 for (int j = 0; j < values.length; j++) {
-                    if (values[j].matches(nullValues) || values[j].equals("")) {
+                    if (values[j].matches(nullValues) || values[j].equals("") || values[j].equals("\r")) {
                         values[j] = null;
                     }
                     if (j < dataColumns.size()) {
@@ -583,7 +583,7 @@ public class DataManager implements ActionHandler {
                     break;
                 case Action.CTR:
                     if (tempColumns.get((int) a.getTarget()).getType() == String.class) {
-                        JOptionPane.showMessageDialog(MainMenu.main, "This can"
+                        JOptionPane.showMessageDialog(MainMenu.main, "This can "
                                 + "only be performed on numerical columns.");
                         return -1;
                     }

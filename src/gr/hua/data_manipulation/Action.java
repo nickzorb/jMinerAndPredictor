@@ -52,7 +52,7 @@ public class Action implements Serializable, Cloneable {
 
     protected Action(Action c) {
         mode = c.mode;
-        flags = new LinkedList<>();
+        flags = new LinkedList();
         if (c.flags != null) {
             for (String s : c.flags) {
                 flags.add(s);
