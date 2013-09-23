@@ -9,7 +9,7 @@ public class NumParser {
             temp = temp.replace(',', '.');
         }
         if (temp.startsWith("-")) {
-            temp = temp.replaceAll("-", "");
+            temp = temp.replaceFirst("-", "");
             neg = -1;
         }
         try {
@@ -23,7 +23,7 @@ public class NumParser {
         int neg = 1;
         String temp = s;
         if (temp.startsWith("-")) {
-            temp = temp.replaceAll("-", "");
+            temp = temp.replaceFirst("-", "");
             neg = -1;
         }
         try {
