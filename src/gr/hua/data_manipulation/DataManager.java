@@ -453,9 +453,9 @@ public class DataManager implements ActionHandler {
             while (reader.ready()) {
                 fileContents.append((char) reader.read());
             }
-            String replacement = "aeg141t4gggggggga4g15t35h36h111135y35h13";
+            String replacement = "#@#";
             while (fileContents.indexOf(replacement) != -1) {
-                replacement += "135f1f14aegg141rgdg24";
+                replacement += "@#";
             }
             ArrayList<String> literals = new ArrayList();
             if (!literalStart.equals("") || !literalEnd.equals("")) {
@@ -479,7 +479,7 @@ public class DataManager implements ActionHandler {
                 } while (true);
             }
             String[] lines = fileContents.toString().split(rowSeparators);
-            String[] tmpColumns = lines[0].split(columnSeparators);
+            String[] tmpColumns = lines[0].split(columnSeparators, -1);
             for (String s : tmpColumns) {
                 while (s.contains(replacement)) {
                     s = s.replaceFirst(replacement, literals.get(0));
@@ -489,7 +489,7 @@ public class DataManager implements ActionHandler {
                 dataColumns.add(d);
             }
             for (int i = 1; i < lines.length; i++) {
-                String[] values = lines[i].split(columnSeparators);
+                String[] values = lines[i].split(columnSeparators, -1);
                 DataRow tmpRow = new DataRow();
                 for (int j = 0; j < values.length; j++) {
                     if (values[j].matches(nullValues) || values[j].equals("") || values[j].equals("\r")) {

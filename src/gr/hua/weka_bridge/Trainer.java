@@ -149,11 +149,11 @@ public class Trainer extends Thread {
 //            eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1), predictions, new Range("1"), false);
             eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1));
             ///////////////////////////////////////////// 
-//            String[] lines = predictions.toString().split("\n");
+//            String[] lines = predictions.toString().split("\n", -1);
 //            double[] values = new double[lines.length - 1];
 //            double[] predics = new double[lines.length - 1];
 //            for (int i = 1; i < lines.length; i++) {
-//                String[] words = lines[i].split("[^\\d-.]+");
+//                String[] words = lines[i].split("[^\\d-.]+", -1);
 //                if (words.length < 4) {
 //                    continue;
 //                }

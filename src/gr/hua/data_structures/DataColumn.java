@@ -97,7 +97,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
                 doubleCount++;
             }
         }
-        if (intCount > values.size() * THRESHOLD && intCount > doubleCount) {
+        if (intCount > values.size() * THRESHOLD && intCount >= doubleCount) {
             toInteger();
         } else if (doubleCount > values.size() * THRESHOLD) {
             toDouble();

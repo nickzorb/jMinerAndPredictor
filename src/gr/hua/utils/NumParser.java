@@ -8,7 +8,7 @@ public class NumParser {
         if (temp.contains(",")) {
             temp = temp.replace(',', '.');
         }
-        if (temp.contains("-")) {
+        if (temp.startsWith("-")) {
             temp = temp.replaceAll("-", "");
             neg = -1;
         }
@@ -22,7 +22,7 @@ public class NumParser {
     public static Integer parseInt(String s) {
         int neg = 1;
         String temp = s;
-        if (temp.contains("-")) {
+        if (temp.startsWith("-")) {
             temp = temp.replaceAll("-", "");
             neg = -1;
         }
