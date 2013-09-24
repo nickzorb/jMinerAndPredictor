@@ -44,10 +44,13 @@ public class DataMinerTab extends Tab {
         topResultsSP.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
         resultsL.setEnabled(false);
         miningMethods.revalidate();
-        limitSP.setEnabled(false);
-        limitSP.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+        llimitSP.setEnabled(false);
+        llimitSP.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
         limitL.setEnabled(false);
-        limitL2.setEnabled(false);
+        lowerLimit.setEnabled(false);
+        rlimitSP.setEnabled(false);
+        rlimitSP.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+        upperLimit.setEnabled(false);
         limitCB.setEnabled(false);
         ready = true;
     }
@@ -116,7 +119,10 @@ public class DataMinerTab extends Tab {
             p.setProperty(Trainer.OPTIMIZE_ATTRIBUTES, "ON");
             p.setProperty(Trainer.SET_TOP_RESULTS, topResultsSP.getValue().toString());
             if (limitCB.isSelected()) {
-                p.setProperty(Trainer.SET_LIMIT, limitSP.getValue().toString());
+                p.setProperty(Trainer.SET_LOW_LIMIT, llimitSP.getValue().toString());
+            }
+            if (upperLimit.isSelected()) {
+                p.setProperty(Trainer.SET_LIMIT, rlimitSP.getValue().toString());
             }
         }
         if (leaveOneOut.isSelected()) {
@@ -148,6 +154,7 @@ public class DataMinerTab extends Tab {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        canvas1 = new java.awt.Canvas();
         valuesScr = new javax.swing.JScrollPane();
         columnsList = new javax.swing.JList();
         addB = new javax.swing.JButton();
@@ -175,8 +182,10 @@ public class DataMinerTab extends Tab {
         topResultsSP = new javax.swing.JSpinner();
         limitL = new javax.swing.JLabel();
         limitCB = new javax.swing.JCheckBox();
-        limitL2 = new javax.swing.JLabel();
-        limitSP = new javax.swing.JSpinner();
+        lowerLimit = new javax.swing.JLabel();
+        llimitSP = new javax.swing.JSpinner();
+        rlimitSP = new javax.swing.JSpinner();
+        upperLimit = new javax.swing.JCheckBox();
 
         setMaximumSize(new java.awt.Dimension(800, 600));
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -329,7 +338,17 @@ public class DataMinerTab extends Tab {
 
         limitL.setText("Limit recursion depth:");
 
-        limitL2.setText("Limit:");
+        lowerLimit.setText("Lower Limit:");
+
+        llimitSP.setMaximumSize(new java.awt.Dimension(40, 20));
+        llimitSP.setMinimumSize(new java.awt.Dimension(40, 20));
+        llimitSP.setPreferredSize(new java.awt.Dimension(40, 20));
+
+        rlimitSP.setMaximumSize(new java.awt.Dimension(40, 20));
+        rlimitSP.setMinimumSize(new java.awt.Dimension(40, 20));
+        rlimitSP.setPreferredSize(new java.awt.Dimension(40, 20));
+
+        upperLimit.setText("Upper Limit:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -341,6 +360,21 @@ public class DataMinerTab extends Tab {
                     .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(valuesScr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel39, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(98, 98, 98)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(addB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(removeB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(26, 26, 26)
+                                        .addComponent(valuesScr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -357,31 +391,21 @@ public class DataMinerTab extends Tab {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(limitCB)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(limitL2)
+                                        .addComponent(lowerLimit)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(limitSP))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(valuesScr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel39, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(98, 98, 98)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(addB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(removeB, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(26, 26, 26)
-                                        .addComponent(valuesScr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(llimitSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(upperLimit)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(resultsL)
                                 .addGap(39, 39, 39)
                                 .addComponent(topResultsSP, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(mineB)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rlimitSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(mineB))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(valuesScr2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -433,11 +457,13 @@ public class DataMinerTab extends Tab {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addGap(2, 2, 2)
                             .addComponent(limitCB)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(limitSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(mineB))
+                    .addComponent(mineB)
                     .addComponent(limitL, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(limitL2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lowerLimit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(llimitSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(upperLimit)
+                        .addComponent(rlimitSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -487,6 +513,17 @@ public class DataMinerTab extends Tab {
                 }
             }
         }
+        if (prop.get(Trainer.SET_LOW_LIMIT) != null) {
+            if (Integer.parseInt(prop.getProperty(Trainer.SET_LOW_LIMIT)) > selColumns.size()) {
+                JOptionPane.showMessageDialog(this, "Invalid low limit", "Low limit error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else if (prop.get(Trainer.SET_LIMIT) != null) {
+                if (Integer.parseInt(prop.getProperty(Trainer.SET_LOW_LIMIT)) > Integer.parseInt(prop.getProperty(Trainer.SET_LIMIT))) {
+                    JOptionPane.showMessageDialog(this, "Low limit should never be less than upper limit", "Low limit error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         for (MiningMethodPanel m : alMiningMethods) {
             if (m.checked()) {
                 if (m.supportsNumeric()) {
@@ -513,9 +550,11 @@ public class DataMinerTab extends Tab {
         boolean status = autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected();
         topResultsSP.setEnabled(status);
         resultsL.setEnabled(status);
-        limitSP.setEnabled(status);
+        rlimitSP.setEnabled(status);
+        llimitSP.setEnabled(status);
         limitL.setEnabled(status);
-        limitL2.setEnabled(status);
+        lowerLimit.setEnabled(status);
+        upperLimit.setEnabled(status);
         limitCB.setEnabled(status);
     }//GEN-LAST:event_autoAttributesCBActionPerformed
 
@@ -529,9 +568,11 @@ public class DataMinerTab extends Tab {
         boolean status = autoSelAttributesCB.isSelected() || autoAttributesCB.isSelected();
         topResultsSP.setEnabled(status);
         resultsL.setEnabled(status);
-        limitSP.setEnabled(status);
+        llimitSP.setEnabled(status);
+        rlimitSP.setEnabled(status);
         limitL.setEnabled(status);
-        limitL2.setEnabled(status);
+        lowerLimit.setEnabled(status);
+        upperLimit.setEnabled(status);
         limitCB.setEnabled(status);
     }//GEN-LAST:event_autoSelAttributesCBActionPerformed
 
@@ -539,6 +580,7 @@ public class DataMinerTab extends Tab {
     private javax.swing.JButton addB;
     private javax.swing.JCheckBox autoAttributesCB;
     private javax.swing.JCheckBox autoSelAttributesCB;
+    private java.awt.Canvas canvas1;
     private javax.swing.JList columnsList;
     private javax.swing.JScrollPane container;
     private javax.swing.JCheckBox cstat;
@@ -553,15 +595,17 @@ public class DataMinerTab extends Tab {
     private javax.swing.JCheckBox leaveOneOut;
     private javax.swing.JCheckBox limitCB;
     private javax.swing.JLabel limitL;
-    private javax.swing.JLabel limitL2;
-    private javax.swing.JSpinner limitSP;
+    private javax.swing.JSpinner llimitSP;
+    private javax.swing.JLabel lowerLimit;
     private javax.swing.JButton mineB;
     private javax.swing.JPanel miningMethods;
     private javax.swing.JButton removeB;
     private javax.swing.JLabel resultsL;
+    private javax.swing.JSpinner rlimitSP;
     private javax.swing.JList selColumnsList;
     private javax.swing.JList targetList;
     private javax.swing.JSpinner topResultsSP;
+    private javax.swing.JCheckBox upperLimit;
     private javax.swing.JScrollPane valuesScr;
     private javax.swing.JScrollPane valuesScr1;
     private javax.swing.JScrollPane valuesScr2;

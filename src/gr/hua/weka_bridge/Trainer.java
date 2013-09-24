@@ -29,6 +29,7 @@ public class Trainer extends Thread {
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final String SET_TOP_RESULTS = "-top";
     public static final String SET_LIMIT = "-limit";
+    public static final String SET_LOW_LIMIT = "-lowlimit";
     public static final String LEAVE_ONE_OUT = "-loo";
     public static final String STATISTICAL = "-st";
     public static final int STOPPED = 0;
@@ -308,6 +309,9 @@ public class Trainer extends Thread {
                     limit = Integer.parseInt(properties.getProperty(SET_LIMIT));
                 } else {
                     limit  = attributes.size();
+                }
+                if (properties.getProperty(SET_LOW_LIMIT) != null) {
+                    n = Integer.parseInt(properties.getProperty(SET_LOW_LIMIT));
                 }
                 while (run) {
                     curAttributes = new FastVector(n + 1);
