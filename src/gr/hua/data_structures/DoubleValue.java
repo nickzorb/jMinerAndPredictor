@@ -56,11 +56,17 @@ public class DoubleValue extends ColumnValue<Double> implements Cloneable {
 
     @Override
     public String getStringValue() {
+        if (curValue == null) {
+            return null;
+        }
         return curValue.toString();
     }
 
     @Override
-    public double getDoubleValue() {
+    public Double getDoubleValue() {
+        if (curValue == null) {
+            return null;
+        }
         return curValue;
     }
 }

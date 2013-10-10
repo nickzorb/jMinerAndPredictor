@@ -6,7 +6,7 @@ public interface Value<T> {
     
     String getStringValue();
     
-    double getDoubleValue();
+    Double getDoubleValue();
 
     void setValue(T value);
     

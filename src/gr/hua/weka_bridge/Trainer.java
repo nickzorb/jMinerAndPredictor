@@ -29,6 +29,7 @@ public class Trainer extends Thread {
     public static final String OPTIMIZE_ATTRIBUTES = "-optAtt";
     public static final String SET_TOP_RESULTS = "-top";
     public static final String SET_LIMIT = "-limit";
+    public static final String SET_LOW_LIMIT = "-lowlimit";
     public static final String LEAVE_ONE_OUT = "-loo";
     public static final String STATISTICAL = "-st";
     public static final int STOPPED = 0;
@@ -149,11 +150,11 @@ public class Trainer extends Thread {
 //            eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1), predictions, new Range("1"), false);
             eTest.crossValidateModel(classifier, trainingSet, folds, new Random(1));
             ///////////////////////////////////////////// 
-//            String[] lines = predictions.toString().split("\n");
+//            String[] lines = predictions.toString().split("\n", -1);
 //            double[] values = new double[lines.length - 1];
 //            double[] predics = new double[lines.length - 1];
 //            for (int i = 1; i < lines.length; i++) {
-//                String[] words = lines[i].split("[^\\d-.]+");
+//                String[] words = lines[i].split("[^\\d-.]+", -1);
 //                if (words.length < 4) {
 //                    continue;
 //                }
@@ -308,6 +309,9 @@ public class Trainer extends Thread {
                     limit = Integer.parseInt(properties.getProperty(SET_LIMIT));
                 } else {
                     limit  = attributes.size();
+                }
+                if (properties.getProperty(SET_LOW_LIMIT) != null) {
+                    n = Integer.parseInt(properties.getProperty(SET_LOW_LIMIT));
                 }
                 while (run) {
                     curAttributes = new FastVector(n + 1);
