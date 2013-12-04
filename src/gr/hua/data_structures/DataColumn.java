@@ -1,5 +1,8 @@
 package gr.hua.data_structures;
 
+import gr.hua.data_structures.basic.DataValue;
+import gr.hua.data_structures.basic.IntegerValue;
+import gr.hua.data_structures.basic.DoubleValue;
 import gr.hua.data_manipulation.Action;
 import gr.hua.data_manipulation.ActionHandler;
 import gr.hua.gui.MainMenu;
@@ -9,15 +12,15 @@ import gr.hua.weka_bridge.CloneableAttribute;
 import java.util.ArrayList;
 import weka.core.FastVector;
 
-public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandler,
+public class DataColumn<T extends DataValue> implements Column<T>, ActionHandler,
         AttributeGenerator, Cloneable {
 
     public static final double THRESHOLD = 98.0 / 100.0;
     private String name;
-    private ArrayList<ColumnValue> values;
+    private ArrayList<DataValue> values;
     private Class type;
     private AllowedValues allowedValues;
-    
+
     public DataColumn(String name) {
         this.name = name;
         values = new ArrayList();
@@ -29,12 +32,12 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         name = old.name;
         type = old.type;
         values = new ArrayList();
-        for (ColumnValue c : old.values) {
+        for (DataValue c : old.values) {
             values.add(c.clone());
         }
         allowedValues = old.allowedValues.clone();
     }
-    
+
     public Class getType() {
         return type;
     }
@@ -42,12 +45,12 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     public void setType(Class c) {
         type = c;
     }
-    
+
     public void increment(int i) {
         values.get(i).alterPopulation(1);
     }
 
-    public ColumnValue get(int i) {
+    public DataValue get(int i) {
         return values.get(i);
     }
 
@@ -71,7 +74,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         if (type == String.class) {
             checkIfNumerical();
         } //else {
-//            for (ColumnValue cv : values) {
+//            for (DataValue cv : values) {
 //                if (!allowedValues.isAllowed(cv)) {
 //                    //TODO SHOW ERROR MESSAGE
 //                }
@@ -82,7 +85,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     private void checkIfNumerical() {
         int intCount = 0;
         int doubleCount = 0;
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (cv.isNull()) {
                 intCount++;
                 doubleCount++;
@@ -103,18 +106,18 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
             toDouble();
         }
     }
-    
+
     private void toInteger() {
         type = Integer.class;
-        ArrayList<ColumnValue> newValues = new ArrayList();
-        for (ColumnValue cv : values) {
-            ColumnValue newValue = null;
+        ArrayList<DataValue> newValues = new ArrayList();
+        for (DataValue cv : values) {
+            DataValue newValue = null;
             Integer temp = null;
             if (!cv.isNull()) {
                 temp = NumParser.parseInt(cv.getValue().toString());
             }
             if (temp == null) {
-                for (ColumnValue ncv : newValues) {
+                for (DataValue ncv : newValues) {
                     if (ncv.isNull()) {
                         newValue = ncv;
                         ncv.alterPopulation(cv.getPopulation());
@@ -127,7 +130,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
                     newValues.add(newValue);
                 }
             } else {
-                for (ColumnValue ncv : newValues) {
+                for (DataValue ncv : newValues) {
                     if (ncv.isNull()) {
                         continue;
                     }
@@ -152,15 +155,15 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
 
     private void toDouble() {
         type = Double.class;
-        ArrayList<ColumnValue> newValues = new ArrayList();
-        for (ColumnValue cv : values) {
-            ColumnValue newValue = null;
+        ArrayList<DataValue> newValues = new ArrayList();
+        for (DataValue cv : values) {
+            DataValue newValue = null;
             Double temp = null;
             if (!cv.isNull()) {
                 temp = NumParser.parseDouble(cv.getValue().toString());
             }
             if (temp == null) {
-                for (ColumnValue ncv : newValues) {
+                for (DataValue ncv : newValues) {
                     if (ncv.isNull()) {
                         newValue = ncv;
                         ncv.alterPopulation(cv.getPopulation());
@@ -208,11 +211,11 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     }
 
     @Override
-    public void add(ColumnValue<T> data) {
+    public void add(DataValue<T> data) {
         values.add(data);
     }
-    
-    public void remove(ColumnValue<T> data) {
+
+    public void remove(DataValue<T> data) {
         values.remove(data);
     }
 
@@ -236,10 +239,10 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         }
         return -1;
     }
-    
+
     private int totalPopulation() {
         int res = 0;
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             res += cv.getPopulation();
         }
         return res;
@@ -247,7 +250,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
 
     private int totalPopulationNotNull() {
         int res = 0;
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (!cv.isNull()) {
                 res += cv.getPopulation();
             }
@@ -257,7 +260,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
 
     @Override
     public double nullPercentage() {
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (cv.isNull()) {
                 return (double) cv.getPopulation() / (double) totalPopulation();
             }
@@ -271,7 +274,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         res[0] = Integer.MAX_VALUE;
         res[1] = Integer.MIN_VALUE;
         res[2] = 0;
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (!cv.isNull()) {
                 double value = 0;
                 if (type == Double.class) {
@@ -294,7 +297,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
     private double stdev(double avg) {
         double population = totalPopulationNotNull();
         double res = 0;
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (!cv.isNull()) {
                 double dif;
                 if (type == Double.class) {
@@ -302,7 +305,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
                 } else {
                     dif = (int) cv.getValue() - avg;
                 }
-                res += cv.curPopulation * dif * dif / population;
+                res += cv.getPopulation() * dif * dif / population;
             }
         }
         return Math.sqrt(res);
@@ -320,10 +323,10 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         res.append("\n        ->").append("avg: ").append(statistics[2]);
         res.append("\n        ->").append("σ: ").append(stdev(statistics[2]));
         res.append("\n    ->VALUES:");
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (!cv.isNull()) {
                 res.append("\n        ->").append(cv.getValue());
-                res.append(" : ").append(cv.curPopulation);
+                res.append(" : ").append(cv.getPopulation());
             }
         }
         return res.toString();
@@ -335,10 +338,10 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
         res.append("\n    ->Null Percentage: ").append(nullPercentage() * 100);
         res.append("%");
         res.append("\n    ->Type: Nominal\n    ->VALUES:");
-        for (ColumnValue cv : values) {
+        for (DataValue cv : values) {
             if (!cv.isNull()) {
                 res.append("\n        ->").append(cv.getValue());
-                res.append(" : ").append(cv.curPopulation);
+                res.append(" : ").append(cv.getPopulation());
             }
         }
         return res.toString();
@@ -366,7 +369,7 @@ public class DataColumn<T extends ColumnValue> implements Column<T>, ActionHandl
 
     private CloneableAttribute getNominalAttribute() {
         FastVector nominal_values = new FastVector(values.size());
-        for (ColumnValue c : values) {
+        for (DataValue c : values) {
             String curValue = c.getValue() == null ? "" : c.getValue().toString();
             if (!nominal_values.contains(curValue)) {
                 nominal_values.addElement(curValue);

@@ -1,22 +1,22 @@
-package gr.hua.data_structures;
+package gr.hua.data_structures.basic;
 
 import gr.hua.gui.MainMenu;
 import gr.hua.utils.Logger;
 import javax.swing.JOptionPane;
 import weka.core.Instance;
 
-public class DoubleValue extends ColumnValue<Double> implements Cloneable {
+public class IntegerValue extends DataValue<Integer> implements Cloneable {
 
-    public DoubleValue(Double value) {
+    public IntegerValue(Integer value) {
         super(value);
     }
-    
-    private DoubleValue(ColumnValue<Double> oldValue) {
+
+    private IntegerValue(DataValue<Integer> oldValue) {
         super(oldValue);
     }
-    
+
     @Override
-    public boolean equals(Value<Double> oldValue) {
+    public boolean equals(Value<Integer> oldValue) {
         return curValue == oldValue.getValue();
     }
 
@@ -28,45 +28,37 @@ public class DoubleValue extends ColumnValue<Double> implements Cloneable {
             if (ins.attribute(attribute).isNominal()) {
                 ins.setValue(attribute, curValue.toString());
             } else {
-                ins.setValue(attribute, curValue.doubleValue());
+                ins.setValue(attribute, curValue.intValue());
             }
         }
     }
-    
+
     @Override
-    public ColumnValue<Double> clone() {
-        return new DoubleValue(this);
+    public DataValue<Integer> clone() {
+        return new IntegerValue(this);
     }
-    
+
     @Override
     public void setValue(String newValue) {
         try {
-            setValue(Double.parseDouble(newValue));
+            setValue(Integer.parseInt(newValue));
         } catch (Exception e) {
             Logger.logException(e);
             JOptionPane.showMessageDialog(MainMenu.main, "Value " + newValue
-                    + " not valid for this Double column");
+                    + " not valid for this Integer column");
         }
     }
 
     @Override
-    public void setValue(Double value) {
+    public void setValue(Integer value) {
         curValue = value;
-    }
-
-    @Override
-    public String getStringValue() {
-        if (curValue == null) {
-            return null;
-        }
-        return curValue.toString();
     }
 
     @Override
     public Double getDoubleValue() {
         if (curValue == null) {
-            return null;
+            return Double.NEGATIVE_INFINITY;
         }
-        return curValue;
+        return (double) curValue.intValue();
     }
 }

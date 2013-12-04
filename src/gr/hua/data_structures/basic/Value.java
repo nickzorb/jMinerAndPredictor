@@ -1,4 +1,4 @@
-package gr.hua.data_structures;
+package gr.hua.data_structures.basic;
 
 public interface Value<T> {
 

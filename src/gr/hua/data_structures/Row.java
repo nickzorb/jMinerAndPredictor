@@ -1,6 +1,6 @@
 package gr.hua.data_structures;
 
-interface Row<T> {
+public interface Row<T> {
 
     void remove(int i);
 

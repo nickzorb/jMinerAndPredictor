@@ -4,10 +4,10 @@
  */
 package gr.hua.data_manipulation;
 
-import gr.hua.data_structures.ColumnValue;
+import gr.hua.data_structures.basic.DataValue;
 import gr.hua.data_structures.DataColumn;
 import gr.hua.data_structures.DataRow;
-import gr.hua.data_structures.StringValue;
+import gr.hua.data_structures.basic.StringValue;
 import gr.hua.gui.MainMenu;
 import gr.hua.gui.Preprocessor.FNRDialog;
 import gr.hua.utils.HistoryManager;
@@ -25,12 +25,18 @@ import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -206,7 +212,7 @@ public class DataManager implements ActionHandler {
         return res.toString();
     }
 
-    public ColumnValue get(int i, int j) {
+    public DataValue get(int i, int j) {
         if (!ready) {
             return null;
         }
@@ -587,16 +593,34 @@ public class DataManager implements ActionHandler {
                                 + "only be performed on numerical columns.");
                         return -1;
                     }
-                    Object[] rangesSelection = new Object[19];
+                    JPanel panel = new JPanel();
+                    String[] ranges = new String[19];
                     for (int i = 2; i <= 20; i++) {
-                        rangesSelection[i - 2] = i;
+                        ranges[i - 2] = i + "";
                     }
-                    int ranges = (int)JOptionPane.showInputDialog(
-                            MainMenu.main, "Please select the number "
-                            + "of buckets to split into", "Buckets",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null, rangesSelection, rangesSelection[0]);
-                    toRanges((int) a.getTarget(), ranges, false);
+                    JComboBox rangesCB = new JComboBox();
+                    rangesCB.setModel(new DefaultComboBoxModel(ranges));
+                    panel.add(rangesCB);
+                    panel.add(Box.createHorizontalStrut(15));
+                    JRadioButton freq = new JRadioButton("Equal frequency");
+                    panel.add(freq);
+                    panel.add(Box.createVerticalStrut(15));
+                    JRadioButton size = new JRadioButton("Equal range", true);
+                    panel.add(size);
+                    ButtonGroup group = new ButtonGroup();
+                    group.add(size);
+                    group.add(freq);
+                    int resp = JOptionPane.showConfirmDialog(null, panel,
+                            "Number of buckets to use",
+                            JOptionPane.OK_CANCEL_OPTION);
+                    if (resp == JOptionPane.OK_OPTION) {
+                        int buckets = rangesCB.getSelectedIndex() + 2;
+                        if (size.isSelected()) {
+                            toRanges((int) a.getTarget(), buckets, false);
+                        } else {
+                            toRanges((int) a.getTarget(), buckets, true);
+                        }
+                    }
                     break;
                 case Action.GFNRV:
                     ArrayList<String> values = new ArrayList();
@@ -665,14 +689,6 @@ public class DataManager implements ActionHandler {
         return 0;
     }
 
-    @Override
-    public Action[] getCounterActions() {
-        if (!ready) {
-            return null;
-        }
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     private void deleteColumn(int i) {
         if (!ready) {
             return;
@@ -690,7 +706,7 @@ public class DataManager implements ActionHandler {
         DataRow cur = tempRows.get(i);
         for (int j = 0; j < tempColumns.size(); j++) {
             if (j < cur.size()) {
-                ColumnValue curValue = cur.get(j);
+                DataValue curValue = cur.get(j);
                 DataColumn curC = tempColumns.get(j);
                 curValue.alterPopulation(-1);
                 if (curValue.getPopulation() == 0) {
@@ -765,7 +781,7 @@ public class DataManager implements ActionHandler {
             for (int i = 0; i < cur.size(); i++) {
                 if (cur.get(i).getStringValue().equals(c.getValueAffected())) {
                     int indx = tempColumns.get(i).find(c.getNewValue());
-                    ColumnValue repl;
+                    DataValue repl;
                     if (indx == -1) {
                         repl = cur.get(i).clone();
                         repl.setPopulation(1);
@@ -792,17 +808,63 @@ public class DataManager implements ActionHandler {
     }
     
     private void toRanges(int c, int buckets, boolean eq) {
+        DecimalFormat df = new DecimalFormat("#,###,###,###,###,###.####");
+        DataColumn col = tempColumns.get(c);
+        double[] info = col.minMaxAvg();
+        ArrayList<StringValue> newValues = new ArrayList();
         if (eq) {
-            throw new UnsupportedOperationException();
+            int averageSize = tempRows.size() / buckets;
+            int error = tempRows.size() - averageSize * buckets;
+            DataValue[] rowValues = new DataValue[col.size()];
+            for (int i = 0; i < col.size(); i++) {
+                rowValues[i] = col.get(i);
+            }
+            Arrays.sort(rowValues, new Comparator<DataValue>() {
+                @Override
+                public int compare(DataValue d1, DataValue d2) {
+                    if (d1.getDoubleValue() > d2.getDoubleValue()) {
+                        return 1;
+                    } else if (d1.getDoubleValue() == d2.getDoubleValue()) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            DataValue curBucket = new StringValue("bucket");
+            curBucket.setPopulation(0);
+            double min = 0;
+            double max;
+            int actualBuckets = 0;
+            for (DataValue rowValue : rowValues) {
+                if (curBucket.getPopulation() == 0) {
+                    min = rowValue.getDoubleValue() - Double.MIN_NORMAL;
+                    actualBuckets ++;
+                }
+                curBucket.alterPopulation(rowValue.getPopulation());
+                for (int k = 0; k < tempRows.size(); k++) {
+                    tempRows.get(k).replace(rowValue, curBucket);
+                }
+                col.remove(rowValue);
+                if (curBucket.getPopulation() >= averageSize + error / 2 && actualBuckets != buckets) {
+                    error -= curBucket.getPopulation() - averageSize;
+                    max = rowValue.getDoubleValue() + Double.MIN_NORMAL;
+                    curBucket.setValue(df.format(min) + " : " + df.format(max));
+                    col.add(curBucket);
+                    curBucket = new StringValue("bucket");
+                    curBucket.setPopulation(0);
+                }
+                if (rowValue.equals(rowValues[rowValues.length - 1])) {
+                    max = rowValue.getDoubleValue() + Double.MIN_NORMAL;
+                    curBucket.setValue(df.format(min) + " : " + df.format(max));
+                    col.add(curBucket);
+                }
+            }
         } else {
-            DecimalFormat df = new DecimalFormat("#,###,###,###,###,###.####");
-            double[] info = tempColumns.get(c).minMaxAvg();
             double length = info[1] - info[0];
             double step = length / buckets;
-            DataColumn col = tempColumns.get(c);
             double min = info[0];
             double max = min + step;
-            ArrayList<StringValue> newValues = new ArrayList();
             for (int i = 0; i < buckets; i++) {
                 StringValue temp = new StringValue(df.format(min) + " : " + 
                         df.format(max));
@@ -831,7 +893,23 @@ public class DataManager implements ActionHandler {
                     col.add(s);
                 }
             }
-            col.setType(String.class);
+        }
+        col.setType(String.class);
+    }
+    
+    private void arraySort(DataValue[] values) {
+        for (int i = 0; i < values.length - 1; i++) {
+            int minL = i;
+            for (int j = i + 1; j < values.length; j++) {
+                if (values[j].getDoubleValue() < values[i].getDoubleValue()) {
+                    minL = j;
+                }
+            }
+            if (minL != i) {
+                DataValue tempData = values[i];
+                values[i] = values[minL];
+                values[minL] = tempData;
+            }
         }
     }
 }

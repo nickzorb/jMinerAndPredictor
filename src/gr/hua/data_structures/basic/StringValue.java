@@ -1,14 +1,14 @@
-package gr.hua.data_structures;
+package gr.hua.data_structures.basic;
 
 import weka.core.Instance;
 
-public class StringValue extends ColumnValue<String> implements Cloneable{
+public class StringValue extends DataValue<String> implements Cloneable{
 
     public StringValue(String value) {
         super(value);
     }
 
-    private StringValue(ColumnValue<String> oldValue) {
+    private StringValue(DataValue<String> oldValue) {
         super(oldValue);
     }
 
@@ -27,18 +27,13 @@ public class StringValue extends ColumnValue<String> implements Cloneable{
     }
 
     @Override
-    public ColumnValue<String> clone() {
+    public DataValue<String> clone() {
         return new StringValue(this);
     }
 
     @Override
     public void setValue(String value) {
         curValue = value;
-    }
-
-    @Override
-    public String getStringValue() {
-        return curValue;
     }
 
     @Override

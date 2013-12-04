@@ -1,6 +1,8 @@
 package gr.hua.data_structures;
 
-interface Column<T> {
+import gr.hua.data_structures.basic.DataValue;
+
+public interface Column<T> {
 
     void setName(String name);
 
@@ -16,7 +18,7 @@ interface Column<T> {
 
     String getName();
 
-    void add(ColumnValue<T> data);
+    void add(DataValue<T> data);
 
     int find(String value);
 

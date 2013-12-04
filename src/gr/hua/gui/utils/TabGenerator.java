@@ -1,4 +1,4 @@
-package gr.hua.gui_utils;
+package gr.hua.gui.utils;
 
 import gr.hua.gui.Tab;
 import gr.hua.gui.Predictor.PredictorTab;

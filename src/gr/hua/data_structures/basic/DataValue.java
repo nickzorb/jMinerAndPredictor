@@ -1,9 +1,9 @@
-package gr.hua.data_structures;
+package gr.hua.data_structures.basic;
 
 import java.util.concurrent.atomic.AtomicLong;
 import weka.core.Instance;
 
-public abstract class ColumnValue<T> implements Value<T>, Cloneable {
+public abstract class DataValue<T> implements Value<T>, Cloneable {
 
     private static final AtomicLong nextId = new AtomicLong();
     
@@ -14,12 +14,12 @@ public abstract class ColumnValue<T> implements Value<T>, Cloneable {
      */
     private final long id = nextId.incrementAndGet();
 
-    public ColumnValue(T value) {
+    public DataValue(T value) {
         curValue = value;
         curPopulation = 1;
     }
 
-    protected ColumnValue(ColumnValue<T> oldValue) {
+    protected DataValue(DataValue<T> oldValue) {
         assert (oldValue != null);
         curValue = oldValue.curValue;
         curPopulation = oldValue.curPopulation;
@@ -45,8 +45,13 @@ public abstract class ColumnValue<T> implements Value<T>, Cloneable {
     public boolean isNull() {
         return curValue == null;
     }
+    
+    @Override
+    public String getStringValue() {
+        return curValue == null ? "" : curValue.toString();
+    }
 
     public abstract void populateInstance(Instance ins, int attribute);
 
-    public abstract ColumnValue<T> clone();
+    public abstract DataValue<T> clone();
 }

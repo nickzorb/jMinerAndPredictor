@@ -1,7 +1,7 @@
 package gr.hua.gui;
 
 import gr.hua.data_manipulation.DataManager;
-import gr.hua.gui_utils.TabGenerator;
+import gr.hua.gui.utils.TabGenerator;
 import gr.hua.utils.Logger;
 import gr.hua.utils.SimpleLoggable;
 import java.awt.BorderLayout;

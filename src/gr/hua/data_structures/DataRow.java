@@ -1,5 +1,6 @@
 package gr.hua.data_structures;
 
+import gr.hua.data_structures.basic.DataValue;
 import gr.hua.data_manipulation.Action;
 import gr.hua.data_manipulation.ActionHandler;
 import gr.hua.gui.MainMenu;
@@ -11,10 +12,10 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class DataRow implements Row<ColumnValue>, ActionHandler,
+public class DataRow implements Row<DataValue>, ActionHandler,
         InstanceGenerator, Cloneable {
 
-    private ArrayList<ColumnValue> values;
+    private ArrayList<DataValue> values;
 
     public DataRow() {
         values = new ArrayList();
@@ -22,7 +23,7 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
 
     private DataRow(DataRow r) {
         values = new ArrayList();
-        for (ColumnValue c : r.values) {
+        for (DataValue c : r.values) {
             values.add(c.clone());
         }
     }
@@ -33,22 +34,22 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     }
 
     @Override
-    public void remove(ColumnValue d) {
+    public void remove(DataValue d) {
         values.remove(d);
     }
 
     @Override
-    public void add(ColumnValue d) {
+    public void add(DataValue d) {
         values.add(d);
     }
 
     @Override
-    public void add(int i, ColumnValue d) {
+    public void add(int i, DataValue d) {
         values.add(i, d);
     }
 
     @Override
-    public ColumnValue get(int i) {
+    public DataValue get(int i) {
         return values.get(i);
     }
 
@@ -58,12 +59,12 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     }
 
     @Override
-    public int columnOf(ColumnValue d) {
+    public int columnOf(DataValue d) {
         return values.indexOf(d);
     }
 
     @Override
-    public void replace(ColumnValue old, ColumnValue replacement) {
+    public void replace(DataValue old, DataValue replacement) {
         if (values.contains(old)) {
             values.add(values.indexOf(old), replacement);
             values.remove(old);
@@ -73,7 +74,7 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     @Override
     public String[] toArray() {
         String[] res = new String[values.size()];
-        for (ColumnValue c : values) {
+        for (DataValue c : values) {
             if (c.isNull()) {
                 res[values.indexOf(c)] = "";
             } else {
@@ -86,7 +87,7 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     @Override
     public double nullPercentage() {
         double nulls = 0;
-        for (ColumnValue c : values) {
+        for (DataValue c : values) {
             if (c.isNull()) {
                 nulls++;
             }
@@ -108,18 +109,13 @@ public class DataRow implements Row<ColumnValue>, ActionHandler,
     }
 
     @Override
-    public Action[] getCounterActions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public Instance getInstance(FastVector attributes, Instances dataset) {
         Instance res = new Instance(attributes.size());
         res.setDataset(dataset);
         int attributeId = 0;
         for (CloneableAttribute attr : Arrays.copyOf(attributes.toArray(), attributes.size(), CloneableAttribute[].class)) {
             int columnIndex = MainMenu.MANAGER.findColumn(attr.name());
-            ColumnValue c = values.get(columnIndex);
+            DataValue c = values.get(columnIndex);
             c.populateInstance(res, attributeId);
             attributeId++;
         }
