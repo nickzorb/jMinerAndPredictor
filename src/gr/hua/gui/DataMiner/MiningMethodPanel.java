@@ -33,8 +33,7 @@ public abstract class MiningMethodPanel extends javax.swing.JPanel {
     private static final JRipPanel jrip = new JRipPanel();
     private static final LibSVMPanel svm = new LibSVMPanel();
     private static final RotationForestPanel rfrst = new RotationForestPanel();
-    private static final LinearRegressionPanel mlregr = new LinearRegressionPanel();
-    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, jrip, svm, rfrst, mlregr};
+    private static final MiningMethodPanel[] panels = {nbayes, lregr, j48, nnet, jrip, svm, rfrst};
     protected ArrayList<CloneableAttribute> attributes;
     protected CloneableAttribute target;
     protected Properties properties;

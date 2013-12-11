@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.swing.JTextArea;
 
-class JOutputStream extends OutputStream {
+class JTAOutputStream extends OutputStream {
 
     private JTextArea log;
 
-    public JOutputStream(JTextArea LOG_AREA) {
+    public JTAOutputStream(JTextArea LOG_AREA) {
         log = LOG_AREA;
     }
 

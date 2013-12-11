@@ -123,7 +123,7 @@ public class DataManager implements ActionHandler {
             return;
         }
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(file), properties.getProperty(W_ENCODING)))) {
+                new FileOutputStream(file), properties.getProperty(W_ENCODING)))) {
             bw.write(columnsToFile());
             bw.write(rowsToFile());
         } catch (Exception e) {
@@ -452,7 +452,7 @@ public class DataManager implements ActionHandler {
         String rowSeparators = properties.getProperty(R_LINE_BREAK);
         String nullValues = properties.getProperty(R_NULL_VALUES);
         try (InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(file), properties.getProperty(R_ENCODING))) {
+                new FileInputStream(file), properties.getProperty(R_ENCODING))) {
             StringBuilder fileContents = new StringBuilder();
             ArrayList<DataColumn> dataColumns = new ArrayList();
             ArrayList<DataRow> dataRows = new ArrayList();
@@ -555,7 +555,7 @@ public class DataManager implements ActionHandler {
         for (DataRow d : rows.getLatestState()) {
             tempRows.add(d.clone());
         }
-        for (DataRow d: tempRows) {
+        for (DataRow d : tempRows) {
             for (int i = 0; i < tempColumns.size(); i++) {
                 String needle = d.get(i).isNull() ? null : d.get(i).getStringValue();
                 d.replace(d.get(i), tempColumns.get(i).get(tempColumns.get(i).find(needle)));
@@ -565,13 +565,13 @@ public class DataManager implements ActionHandler {
             tempActions.add(a);
             switch (a.getMode()) {
                 case Action.CCN:
-                    String newName = JOptionPane.showInputDialog(MainMenu.main, 
+                    String newName = JOptionPane.showInputDialog(MainMenu.main,
                             "Please provide a new name for the column:",
                             "New Name");
                     rename((int) a.getTarget(), newName);
                     break;
                 case Action.CD:
-                    String name = JOptionPane.showInputDialog(MainMenu.main, 
+                    String name = JOptionPane.showInputDialog(MainMenu.main,
                             "Please provide a name for the new column:",
                             "New Column");
                     duplicateColumn((int) a.getTarget(), name);
@@ -639,7 +639,7 @@ public class DataManager implements ActionHandler {
                     for (int i = 0; i <= 25; i++) {
                         cselection[i] = (i * 2.0 + 50.0) / 100.0;
                     }
-                    double cLimit = (double)JOptionPane.showInputDialog(
+                    double cLimit = (double) JOptionPane.showInputDialog(
                             MainMenu.main, "Please select the minnimum "
                             + "acceptable fill rate", "Delete empty",
                             JOptionPane.QUESTION_MESSAGE,
@@ -651,7 +651,7 @@ public class DataManager implements ActionHandler {
                     for (int i = 0; i <= 25; i++) {
                         rselection[i] = (i * 2.0 + 50.0) / 100.0;
                     }
-                    double rLimit = (double)JOptionPane.showInputDialog(
+                    double rLimit = (double) JOptionPane.showInputDialog(
                             MainMenu.main, "Please select the minnimum "
                             + "acceptable fill rate", "Delete empty",
                             JOptionPane.QUESTION_MESSAGE,
@@ -722,7 +722,7 @@ public class DataManager implements ActionHandler {
         dup.setName(n);
         tempColumns.add(d + 1, dup);
         for (DataRow r : tempRows) {
-            r.add(d + 1, dup.get(dup.find(r.get(d).getStringValue())));
+            r.add(d + 1, dup.get(dup.find(r.get(d).isNull() ? null : r.get(d).getStringValue())));
         }
     }
 
@@ -735,7 +735,7 @@ public class DataManager implements ActionHandler {
             dup.get(i).alterPopulation(1);
         }
     }
-    
+
     private void deleteEmptyC(double limit) {
         for (int i = tempColumns.size() - 1; i >= 0; i--) {
             if (tempColumns.get(i).nullPercentage() > 1 - limit) {
@@ -743,7 +743,7 @@ public class DataManager implements ActionHandler {
             }
         }
     }
-    
+
     private void deleteEmptyR(double limit) {
         for (int i = tempRows.size() - 1; i >= 0; i--) {
             if (tempRows.get(i).nullPercentage() > 1 - limit) {
@@ -751,11 +751,11 @@ public class DataManager implements ActionHandler {
             }
         }
     }
-    
+
     private void rename(int c, String name) {
         tempColumns.get(c).setName(name);
     }
-    
+
     private void fnrColumn(int c, LinkedList<Change> changes) {
         DataColumn cur = tempColumns.get(c);
         for (Change ch : changes) {
@@ -774,7 +774,7 @@ public class DataManager implements ActionHandler {
             }
         }
     }
-    
+
     private void fnrRow(int r, LinkedList<Change> changes) {
         DataRow cur = tempRows.get(r);
         for (Change c : changes) {
@@ -800,13 +800,13 @@ public class DataManager implements ActionHandler {
             }
         }
     }
-    
+
     private void fnrGlobal(LinkedList<Change> changes) {
         for (int i = 0; i < tempColumns.size(); i++) {
             fnrColumn(i, changes);
         }
     }
-    
+
     private void toRanges(int c, int buckets, boolean eq) {
         DecimalFormat df = new DecimalFormat("#,###,###,###,###,###.####");
         DataColumn col = tempColumns.get(c);
@@ -839,7 +839,7 @@ public class DataManager implements ActionHandler {
             for (DataValue rowValue : rowValues) {
                 if (curBucket.getPopulation() == 0) {
                     min = rowValue.getDoubleValue() - Double.MIN_NORMAL;
-                    actualBuckets ++;
+                    actualBuckets++;
                 }
                 curBucket.alterPopulation(rowValue.getPopulation());
                 for (int k = 0; k < tempRows.size(); k++) {
@@ -866,10 +866,10 @@ public class DataManager implements ActionHandler {
             double min = info[0];
             double max = min + step;
             for (int i = 0; i < buckets; i++) {
-                StringValue temp = new StringValue(df.format(min) + " : " + 
-                        df.format(max));
+                StringValue temp = new StringValue(df.format(min) + " : "
+                        + df.format(max));
                 temp.setPopulation(0);
-                for (int j = col.size() - 1; j >= 0 ; j--) {
+                for (int j = col.size() - 1; j >= 0; j--) {
                     if (col.get(j).isNull()) {
                         continue;
                     }
@@ -896,7 +896,7 @@ public class DataManager implements ActionHandler {
         }
         col.setType(String.class);
     }
-    
+
     private void arraySort(DataValue[] values) {
         for (int i = 0; i < values.length - 1; i++) {
             int minL = i;

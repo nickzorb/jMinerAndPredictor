@@ -60,7 +60,7 @@ public final class Logger {
 
     static {
         try {
-            OUT = new PrintStream(new JOutputStream((JTextArea) MainMenu.COMPONENTS.get(MainMenu.LOG_AREAS).get(0)));
+            OUT = new PrintStream(new JTAOutputStream((JTextArea) MainMenu.COMPONENTS.get(MainMenu.LOG_AREAS).get(0)));
             LOG = new PrintStream(new FileOutputStream(LOG_FILE, true));
             ERROR_LOG =
                     new PrintStream(new FileOutputStream(ERROR_LOG_FILE, true));
