@@ -14,24 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gr.hua.weka_bridge.classifiers;
+package gr.hua.weka_bridge;
 
-import gr.hua.data_structures.basic.Measures;
-import weka.classifiers.bayes.NaiveBayes;
+import java.util.ArrayList;
 
 /**
  *
  * @author NickZorb
  */
-public class JNaiveBayes  extends JClassifier {
+public class AttributeSet extends ArrayList<CloneableAttribute>
+        implements Cloneable {
 
-    public JNaiveBayes() {
-        super(new NaiveBayes(), "Naive Bayes",
-                new String[]{Measures.ROC_STATISTIC,
-                    Measures.SUCCESS_PERCENTAGE,
-                    Measures.KAPPA_STATISTIC},
-                new String[]{"-O"}, "An implementation of the Naive Bayes"
-                        + " algorithm.");
+    public AttributeSet() {
+        super();
     }
-    
+
+    public AttributeSet(AttributeSet old) {
+        super();
+        for (CloneableAttribute attr : old) {
+            add(attr.clone());
+        }
+    }
+
+    @Override
+    public AttributeSet clone() {
+        return new AttributeSet(this);
+    }
+
 }
